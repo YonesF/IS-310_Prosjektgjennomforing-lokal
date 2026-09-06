@@ -69,6 +69,14 @@
    the site is set like a map sheet, and a map sheet has no rounded corners.
    --------------------------------------------------------------------------- */
 :root {
+  /* The screen this site is drawn for. Everything below is unchanged on screens
+     up to this size; past it the whole page grows with the screen instead of
+     staying put and letting the extra room turn into empty margin.
+
+     Change these two numbers to change what "full size" means. */
+  --design-width: 1600;
+  --design-height: 900;
+
   --surface: #55606e;
   --surface-2: #5d6876;
   --surface-strong: #6a7684;
@@ -138,7 +146,30 @@
   box-sizing: border-box;
 }
 
+/* One knob for the size of the whole page.
+
+   Every length in this stylesheet is either a rem or a vw, and the rems were
+   all anchored to the browser's fixed 16px. That is why the site looked right
+   on a laptop and shrunken on a television: the vw parts kept growing, the rem
+   parts did not, and every clamp hit its ceiling around the design width and
+   stopped. Past that point a bigger screen bought nothing but margin.
+
+   Tying the root size to the viewport makes one rem equal one hundredth of the
+   design width, so rem and vw grow together and the page scales as a whole -
+   the same layout, the same proportions, just larger. It cannot and does not
+   touch the visitor's own browser zoom; no page can. What it does is make the
+   site's own idea of "full size" follow the screen it is on.
+
+   Held to 16px below the design width, so nothing changes on the screens this
+   was built and checked on. Measured against height as well as width, or an
+   ultrawide monitor would blow the type up to fill a width it has plenty of
+   and a height it does not. */
 html {
+  font-size: clamp(
+    16px,
+    min(calc(100vw / var(--design-width) * 16), calc(100dvh / var(--design-height) * 16)),
+    44px
+  );
   background: var(--surface);
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
