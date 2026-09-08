@@ -38,6 +38,22 @@ export const plan = {
 export const members = {
   group: {
     label: 'Her er vi samlet hos Kartverket',
+    /* Trykk på gruppebildet, og dette panelet kommer opp nedenfra. `intro` er
+       ingressen og står litt større; resten følger som vanlige avsnitt. Alle
+       lyser seg fram ord for ord når panelet rulles, slik beskrivelsene i
+       portrettpanelene gjør. Tomme avsnitt hoppes over, og har ingenting fått
+       tekst ennå, sier panelet bare at det kommer. */
+    panel: {
+      open: 'Se hvem vi er',
+      title: 'SYMITO',
+      subtitle: 'Hvem er vi?',
+      intro:
+        'Vi er et engasjert og ambisiøst studentteam med komplementær kompetanse innen systemutvikling, interaksjonsdesign, kunstig intelligens og prosjektstyring. Våre ulike styrker gjør at vi utfyller hverandre godt og sammen dekker hele spekteret fra idé og design til teknisk utvikling og gjennomføring.',
+      paragraphs: [
+        'Teamet består av mennesker med ulik bakgrunn, erfaring, alder, kunnskap og personlighet. Dette gir oss flere perspektiver, bedre diskusjoner og sterkere løsninger. Samtidig deler vi den samme arbeidsmoralen: Vi er lærevillige, løsningsorienterte og har et høyt ambisjonsnivå.',
+        'Det som kjennetegner oss aller mest, er hvordan vi jobber sammen. Vi støtter hverandre, deler kunnskap og tar ansvar når det trengs. Vi ønsker ikke bare å levere gode resultater, men å være et team det er både effektivt og motiverende å samarbeide med. Vi er klare for å ta på oss utfordrende prosjekter, lære raskt og skape løsninger vi kan være stolte av.',
+      ],
+    },
     photos: [
       { src: media('group-1.webp'), width: 1800, height: 1350 },
       { src: media('group-2.webp'), width: 1800, height: 1350 },
