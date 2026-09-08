@@ -4,6 +4,7 @@ import { useMotion } from '../lib/motion.jsx'
 import { useReveal } from '../lib/reveal.jsx'
 import { cx } from '../lib/cx.js'
 import MemberPanel from './MemberPanel.jsx'
+import GroupPanel from './GroupPanel.jsx'
 
 /* ===========================================================================
    Medlemmer: the group above, the five of them below.
@@ -14,7 +15,7 @@ const SWAP_INTERVAL = 5200
 /* The group's frames, crossfading in turn. They all sit in the frame at once and
    only their opacity moves, so the swap costs a composite rather than a layout
    and never shifts the page. The frame uncovers from the bottom as it arrives. */
-function GroupPhotos() {
+function GroupPhotos({ onOpen }) {
   const { still } = useMotion()
   const host = useRef(null)
   const [figure, inView] = useReveal()
@@ -47,22 +48,32 @@ function GroupPhotos() {
 
   return (
     <figure className={cx('members__group', inView && 'is-in')} ref={figure}>
-      {/* One image as far as assistive technology is concerned: every frame is
-          the same group, and announcing a swap between them would be noise. */}
-      <div className="members__frame" ref={host} role="img" aria-label={members.group.label}>
-        {photos.map((photo, index) => (
-          <img
-            key={photo.src}
-            src={photo.src}
-            alt=""
-            width={photo.width}
-            height={photo.height}
-            loading="lazy"
-            decoding="async"
-            className={index === shown ? 'is-shown' : undefined}
-          />
-        ))}
-      </div>
+      {/* The whole photograph is the control that opens the group panel. It
+          carries its own name, so the button says what it does rather than only
+          what it shows. */}
+      <button
+        type="button"
+        className="members__open"
+        aria-label={members.group.panel.open}
+        onClick={onOpen}
+      >
+        {/* One image as far as assistive technology is concerned: every frame is
+            the same group, and announcing a swap between them would be noise. */}
+        <div className="members__frame" ref={host} role="img" aria-label={members.group.label}>
+          {photos.map((photo, index) => (
+            <img
+              key={photo.src}
+              src={photo.src}
+              alt=""
+              width={photo.width}
+              height={photo.height}
+              loading="lazy"
+              decoding="async"
+              className={index === shown ? 'is-shown' : undefined}
+            />
+          ))}
+        </div>
+      </button>
       <figcaption className="members__caption">{members.group.label}</figcaption>
     </figure>
   )
@@ -134,9 +145,13 @@ export default function MembersSection() {
      what changes, not the panel. */
   const [opened, setOpened] = useState(null)
 
+  /* And whether the group's own panel is up. Kept apart from the portraits so
+     opening one never has to reason about the other. */
+  const [groupOpen, setGroupOpen] = useState(false)
+
   return (
     <div className="members">
-      <GroupPhotos />
+      <GroupPhotos onOpen={() => setGroupOpen(true)} />
 
       <ul className="members__row">
         {members.people.map((person, index) => (
@@ -150,6 +165,7 @@ export default function MembersSection() {
       </ul>
 
       <MemberPanel person={opened} onClose={() => setOpened(null)} />
+      <GroupPanel open={groupOpen} onClose={() => setGroupOpen(false)} />
     </div>
   )
 }
