@@ -486,17 +486,18 @@
   gap: 0.5rem;
 }
 
-/* The description lights word by word as it rises up the panel. The paragraph
-   carries the progress; each word carries where its own share of that progress
-   begins, exactly as the contour lines do with --draw. Default 1 so the text is
+/* Any paragraph lit word by word as it rises up its panel - descriptions in the
+   portrait panels, the group's own text in theirs. The paragraph carries the
+   progress; each word carries where its own share of that progress begins,
+   exactly as the contour lines do with --draw. Default 1 so the text is
    readable before a single line of script has run, or if none ever does. */
-.member-panel__about {
+[data-lit] {
   --lit: 1;
 }
 
-/* --span here is the WORD_SPAN constant in MemberPanel.jsx; the two describe
-   the same overlap and should move together. */
-.member-panel__word {
+/* --span here is the WORD_SPAN constant in LitText.jsx; the two describe the
+   same overlap and should move together. */
+.lit-word {
   --span: 0.16;
   color: var(--text);
   /* The floor is a readable grey rather than a whisper: a word waiting its turn
@@ -592,6 +593,253 @@ a.member-panel__link:focus-visible {
   /* Too narrow to sit beside anything, so it takes the screen. */
   .member-panel {
     width: 100vw;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   The group's own panel. Same sheet, same weather, but it rises from the bottom
+   instead of sliding in from the side: the portrait panels come in beside a row
+   of faces, while this one belongs to the picture it is opened from and comes
+   up underneath it.
+   --------------------------------------------------------------------------- */
+.members__open {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: inherit;
+  cursor: pointer;
+}
+
+.group-panel {
+  width: 100vw;
+  max-width: 100vw;
+  /* Nearly the whole screen: the photograph behind the words is the point of
+     this panel, and it needs room to be a place rather than a picture. The
+     strip left at the top keeps it reading as a sheet that rose from the
+     bottom rather than a page that replaced the one underneath.
+
+     Only the bottom edge is anchored. A modal dialog is laid out against
+     inset:0 on every side, and a box pinned top and bottom would take its
+     height from the gap between them rather than from this rule. */
+  inset: auto auto 0 0;
+  height: 92dvh;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  translate: 0 0;
+  opacity: 1;
+  transition:
+    translate 0.6s var(--ease-out),
+    opacity 0.4s ease,
+    overlay 0.6s allow-discrete,
+    display 0.6s allow-discrete;
+}
+
+.group-panel:not([open]) {
+  translate: 0 100%;
+  opacity: 0;
+}
+
+@starting-style {
+  .group-panel[open] {
+    translate: 0 100%;
+    opacity: 0;
+  }
+}
+
+.group-panel::backdrop {
+  background: rgba(6, 11, 18, 0.55);
+  opacity: 1;
+  transition:
+    opacity 0.5s ease,
+    overlay 0.5s allow-discrete,
+    display 0.5s allow-discrete;
+}
+
+.group-panel:not([open])::backdrop {
+  opacity: 0;
+}
+
+@starting-style {
+  .group-panel[open]::backdrop {
+    opacity: 0;
+  }
+}
+
+.group-panel.is-dragging {
+  cursor: grabbing;
+  user-select: none;
+}
+
+.group-panel__sheet {
+  --panel-gap: clamp(1.25rem, 3vw, 2rem);
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  /* Two rows: the close bar holds the top, and the words take everything left
+     and sit in the middle of it. Centring the whole stack instead would drag
+     the button into the middle of the panel along with them. */
+  grid-template-rows: auto 1fr;
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  min-height: 100%;
+  padding: clamp(1.5rem, 3.5vw, 3rem) var(--pad-x) clamp(2rem, 5vw, 4rem);
+}
+
+/* The same trick as the portrait panel: a bar of no height, so the button hangs
+   over the corner and stays there while a long entry scrolls underneath. */
+.group-panel__bar {
+  position: sticky;
+  z-index: 2;
+  top: clamp(0.75rem, 2vw, 1.25rem);
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  height: 0;
+  margin-bottom: calc(-1 * var(--panel-gap));
+}
+
+.group-panel__close {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--surface) 70%, transparent);
+  color: var(--text);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.group-panel__close:hover,
+.group-panel__close:focus-visible {
+  background: var(--surface-strong);
+}
+
+/* The photograph fills the panel behind everything else. It sits under the
+   sheet rather than inside its flow, so it covers the whole scrollable height
+   and the words simply stand on it. */
+.group-panel__backdrop {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.group-panel__photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 38%;
+  /* Scaled past its own frame so the blur has picture to bleed into. Without
+     this the softened edges fade to nothing and the frame shows as a pale
+     border all the way round. */
+  transform: scale(1.14);
+  filter: blur(26px) saturate(0.9);
+  opacity: 0.45;
+}
+
+/* Dark blue closing in from every edge, deep enough at the corners to read as
+   a vignette rather than a tint: it holds the middle clear for the words and
+   keeps their contrast wherever the photograph behind happens to be bright.
+
+   Two gradients and a shadow, because one radial alone leaves the corners of a
+   wide panel lighter than its sides - the ellipse reaches them last. */
+.group-panel__backdrop::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      108% 76% at 50% 44%,
+      rgba(6, 14, 28, 0.04) 0%,
+      rgba(5, 12, 26, 0.42) 46%,
+      rgba(4, 10, 21, 0.82) 78%,
+      rgba(2, 6, 15, 0.97) 100%
+    ),
+    linear-gradient(180deg, rgba(3, 8, 18, 0.86) 0%, transparent 24%, transparent 72%, rgba(3, 8, 18, 0.9) 100%),
+    linear-gradient(90deg, rgba(3, 8, 18, 0.62) 0%, transparent 16%, transparent 84%, rgba(3, 8, 18, 0.62) 100%);
+  box-shadow: inset 0 0 clamp(6rem, 14vw, 14rem) clamp(1.5rem, 4vw, 4rem) rgba(2, 6, 15, 0.72);
+}
+
+/* Centred on the photograph, and held to a reading measure so the lines stay
+   short enough to follow across all that width. Above the backdrop, and with a
+   little shadow, because the ground underneath is a photograph rather than a
+   flat colour however far it is blurred. */
+.group-panel__text {
+  position: relative;
+  z-index: 1;
+  grid-row: 2;
+  justify-self: center;
+  align-self: center;
+  display: grid;
+  gap: clamp(1rem, 2.4vw, 1.6rem);
+  justify-items: center;
+  align-content: center;
+  width: min(100%, 46rem);
+  text-align: center;
+  text-shadow: 0 1px 18px rgba(4, 10, 22, 0.55);
+}
+
+.group-panel__title {
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 4.4vw, 3.4rem);
+  font-weight: 680;
+  letter-spacing: -0.045em;
+  line-height: 1;
+}
+
+/* The line under the name: the question the panel answers. Set well below the
+   display type so it reads as a second voice rather than a second heading. */
+.group-panel__subtitle {
+  margin-top: -0.35rem;
+  color: var(--accent);
+  font-family: var(--font-body);
+  font-size: clamp(1.05rem, 1.5vw, 1.4rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.group-panel__intro,
+.group-panel__body,
+.group-panel__empty {
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: clamp(0.94rem, 1vw, 1.05rem);
+  font-weight: 400;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.group-panel__intro {
+  font-size: clamp(1.05rem, 1.3vw, 1.3rem);
+  line-height: 1.5;
+}
+
+.group-panel__empty {
+  font-style: italic;
+}
+
+@media (max-width: 900px) {
+  /* A narrow screen blurs to a smaller radius, or the picture behind turns to
+     flat colour and stops being a photograph at all. */
+  .group-panel__photo {
+    transform: scale(1.18);
+    filter: blur(18px) saturate(0.9);
   }
 }
 
