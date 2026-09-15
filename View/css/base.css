@@ -1,7 +1,6 @@
-/* Fivo Sans Modern, in the four weights that exist: the same files the landing
-   scene already pulls down, since the published Unicorn scene is set in this
-   face. Pointing at the same URLs means the browser reuses what it has already
-   cached - no new host on the page, and no new bytes.
+/* Fivo Sans Modern, in the four weights that exist, served from Unicorn
+   Studio's font host - a leftover of the published scene that used to open
+   the site, which was set in this face.
 
    Worth replacing with a licensed woff2 under public/fonts when you have one:
    this is somebody else's asset host, it can move its files whenever it likes,
@@ -110,7 +109,6 @@
   --nav-h: 4.5rem;
 
   --z-nav: 30;
-  --z-toggle: 31;
   --z-grain: 50;
   --z-veil: 60;
   --z-skip: 70;
