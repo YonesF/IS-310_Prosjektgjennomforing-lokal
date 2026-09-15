@@ -1,12 +1,8 @@
 import { useEffect, useState } from 'react'
 
 /* ===========================================================================
-   Whether the landing scene is on screen.
-
-   Two controls turn on this same fact and have to agree about it: the
-   navigation arrives once the landing has gone, and the pause switch belongs
-   to the landing and leaves with it. One observer, one answer, so a change to
-   where the line falls moves both.
+   Whether the landing is on screen. The navigation arrives once the landing
+   has gone; this is the one place that decides where that line falls.
    =========================================================================== */
 export function useLandingInView() {
   /* True to begin with: the landing is the first thing on the page, and the
