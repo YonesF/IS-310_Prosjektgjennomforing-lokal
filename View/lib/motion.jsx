@@ -1,4 +1,4 @@
-import { createContext, use, useCallback, useEffect, useMemo, useState } from 'react'
+import { createContext, use, useEffect, useMemo, useState } from 'react'
 
 /* ===========================================================================
    Two things decide how much this site moves: what the device can afford, and
@@ -23,18 +23,10 @@ function readProfile() {
 
 export function MotionProvider({ children }) {
   /* Read the real profile during the first render rather than correcting it in
-     an effect. Both scenes take their resolution and frame rate from these
+     an effect. The ridge takes its resolution and frame rate from these
      values, and a post-mount change tears down and re-initialises a WebGL
      context that was already running. */
   const [profile, setProfile] = useState(() => (typeof window === 'undefined' ? STILL : readProfile()))
-
-  /* The site opens still and waits to be asked. Everything that moves here -
-     two WebGL scenes, the eased scroll, the scrubbed timelines - costs a
-     machine something, and the visitor is the one who knows whether theirs can
-     afford it. Nothing is hidden by starting this way: the landing scene still
-     renders and freezes on a frame, the map shows itself finished, and the
-     photographs simply do not cycle. */
-  const [pausedByUser, setPausedByUser] = useState(true)
 
   useEffect(() => {
     const media = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -44,24 +36,12 @@ export function MotionProvider({ children }) {
     return () => media.removeEventListener('change', sync)
   }, [])
 
-  const togglePaused = useCallback(() => setPausedByUser((value) => !value), [])
-
-  /* Two questions that look alike and are not:
-
-     still      the system asked for reduced motion, so nothing on the page
-                should move. Every scene reads this one.
-     heroStill  that, or the visitor pressed pause. The switch reaches only the
-                landing scene - it is the expensive thing here, a whole WebGL
-                context running a published 3D scene, and it is what someone
-                pausing this page is trying to switch off. The ridge, the
-                crossfades, the scrubbed timelines and the eased scroll are
-                cheap by comparison and keep going either way. */
+  /* The system asked for reduced motion, so nothing on the page should move.
+     Every scene reads this one. */
   const still = profile.reduced
-  const heroStill = profile.reduced || pausedByUser
 
   /* The one thing CSS alone animates - the fog - reads the same answer from a
-     class on the root, since it cannot read this context. It drifts behind the
-     whole page rather than belonging to the landing, so it follows `still`. */
+     class on the root, since it cannot read this context. */
   useEffect(() => {
     document.documentElement.classList.toggle('is-still', still)
   }, [still])
@@ -70,14 +50,9 @@ export function MotionProvider({ children }) {
     () => ({
       reduced: profile.reduced,
       lowPower: profile.lowPower,
-      /* The flag every scene but one checks. */
       still,
-      /* And the one the landing scene checks instead. */
-      heroStill,
-      pausedByUser,
-      togglePaused,
     }),
-    [profile.reduced, profile.lowPower, still, heroStill, pausedByUser, togglePaused],
+    [profile.reduced, profile.lowPower, still],
   )
 
   return <MotionContext value={value}>{children}</MotionContext>
