@@ -21,14 +21,29 @@ export const site = {
   tagline: 'Vi går hele veien',
 }
 
-export const plan = {
-  title: 'Vi sketcher en plan',
-  image: {
-    src: media('process-table.webp'),
-    alt: 'Studenter samarbeider over skisser og et rutekart på et arbeidsbord',
-    width: 1100,
-    height: 1374,
+/* The photograph that opens the site, behind the four titles. It is shown
+   full-bleed, so it is cropped to whatever frame the site is seen in; the
+   position it is given in the CSS keeps the faces in the frame however narrow
+   that gets.
+
+   `word` stands behind the group, in front of the wall. That trick needs the
+   group cut out of the photograph with nothing around them - `front` is that
+   cutout, the same picture with a transparent background, laid over the word.
+   Both files must be the same size or the two copies of the group drift
+   apart. */
+export const landing = {
+  photo: {
+    src: media('group-main.webp'),
+    alt: 'Gruppe 11 samlet i en sofa',
+    width: 2400,
+    height: 1085,
   },
+  front: {
+    src: media('group-main-front.webp'),
+    width: 2400,
+    height: 1085,
+  },
+  word: 'SYMITO',
 }
 
 /* The group shot cycles through these frames, crossfading between them; add or
@@ -200,12 +215,6 @@ export const controls = {
   nav: 'Sidenavigasjon',
   heroNav: 'Gå til en del av siden',
   top: 'Til toppen',
-  pause: 'Pause',
-  play: 'Spill av',
-  pauseLabel: 'Pause animasjoner',
-  playLabel: 'Spill av animasjoner',
-  playHint: 'Du trenger en bra Data for denne modusen',
-  imageError: 'Bildet kunne ikke lastes.',
 }
 
 export const sections = [
