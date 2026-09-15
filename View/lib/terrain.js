@@ -4,7 +4,7 @@ import { ROUTE_CONTROL } from './heightField.js'
 /* ===========================================================================
    The landscape, for callers that already have three.js loaded.
 
-   The numbers live in heightField.js so the flat map in the plan section can
+   The numbers live in heightField.js so the flat map behind the video can
    read them without paying for three. This module only adds what needs a
    THREE type: the route as a curve the tube geometry can follow.
    =========================================================================== */
