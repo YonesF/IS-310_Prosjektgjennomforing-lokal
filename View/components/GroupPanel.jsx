@@ -1,12 +1,17 @@
+import { createContext, use, useCallback, useState } from 'react'
 import { members } from '../../Model/site.js'
 import LitText from './LitText.jsx'
 import SlidePanel from './SlidePanel.jsx'
 
 /* ===========================================================================
-   The panel the group photograph opens. It rises from the bottom rather than
+   The panel the group photographs open. It rises from the bottom rather than
    sliding in from the side: the portraits are a row of people and their panels
    come in beside them, while this one is about all of us and comes up under
    the picture it was opened from.
+
+   Two pictures open it - the one that fills the landing and the one in
+   Medlemmer - so there is one panel, mounted once above both, and a hook
+   either picture calls to raise it.
 
    A template until it is written. Whatever is filled in is shown - the intro
    lighting itself word by word on the way up, the same as the descriptions -
@@ -14,6 +19,28 @@ import SlidePanel from './SlidePanel.jsx'
    =========================================================================== */
 
 const { group, detail } = members
+
+const GroupPanelContext = createContext(null)
+
+export function GroupPanelProvider({ children }) {
+  const [open, setOpen] = useState(false)
+  const show = useCallback(() => setOpen(true), [])
+  const hide = useCallback(() => setOpen(false), [])
+
+  return (
+    <GroupPanelContext value={show}>
+      {children}
+      <GroupPanel open={open} onClose={hide} />
+    </GroupPanelContext>
+  )
+}
+
+/* What a picture calls to open the panel. */
+export function useGroupPanel() {
+  const show = use(GroupPanelContext)
+  if (!show) throw new Error('useGroupPanel must be used inside <GroupPanelProvider>')
+  return show
+}
 
 export default function GroupPanel({ open, onClose }) {
   const { panel } = group
