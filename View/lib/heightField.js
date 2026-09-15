@@ -1,7 +1,7 @@
 /* ===========================================================================
    The one landscape the site owns, as pure numbers.
 
-   Three sections draw this same ground: the plan section sketches it flat as
+   Two sections draw this same ground: the video section sketches it flat as
    a contour map, the ambition section raises it as a surface, and both read
    the height field from here so they can never drift into being different
    mountains. This file deliberately imports nothing - the map is drawn with
