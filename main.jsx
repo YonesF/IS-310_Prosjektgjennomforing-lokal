@@ -6,9 +6,8 @@ import { SmoothScroll } from './View/lib/scroll.jsx'
 import { SplitWords } from './View/lib/reveal.jsx'
 import Veil from './View/components/Veil.jsx'
 import SiteNav from './View/components/SiteNav.jsx'
-import PauseToggle from './View/components/PauseToggle.jsx'
 import Landing from './View/components/Landing.jsx'
-import PlanSection from './View/components/PlanSection.jsx'
+import { GroupPanelProvider } from './View/components/GroupPanel.jsx'
 import MembersSection from './View/components/MembersSection.jsx'
 import VideoSection from './View/components/VideoSection.jsx'
 import PendingSection from './View/components/PendingSection.jsx'
@@ -63,14 +62,14 @@ function App() {
           <span className="fog__bank fog__bank--a" />
           <span className="fog__bank fog__bank--b" />
         </div>
-        <SiteNav />
-        <main id="innhold">
-          <Landing />
-          <PlanSection />
-          <TopicSections />
-        </main>
-        <PauseToggle />
-        <div className="grain" aria-hidden="true" />
+        <GroupPanelProvider>
+          <SiteNav />
+          <main id="innhold">
+            <Landing />
+            <TopicSections />
+          </main>
+          <div className="grain" aria-hidden="true" />
+        </GroupPanelProvider>
       </SmoothScroll>
     </MotionProvider>
   )
