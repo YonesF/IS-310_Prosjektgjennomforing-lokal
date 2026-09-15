@@ -208,139 +208,14 @@
 }
 
 /* ---------------------------------------------------------------------------
-   The pause switch: the same corner on every screen, set like the navigation
-   so it can be read over the landing scene.
-   --------------------------------------------------------------------------- */
-.pause-toggle {
-  position: fixed;
-  z-index: var(--z-toggle);
-  left: var(--pad-x);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  padding: 0.5rem 0.2rem;
-  border: 0;
-  background: none;
-  color: var(--text);
-  text-shadow: 0 1px 14px rgba(8, 13, 20, 0.45);
-  font-family: var(--font-display);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  line-height: 1;
-  text-transform: uppercase;
-  cursor: pointer;
-  /* Hidden until the landing scene is on screen, and gone again once it has
-     scrolled away - it drives nothing that is still in view. `visibility` is
-     what keeps it off the tab order while it is away; the delay holds it
-     visible long enough for the fade out to be seen.
-
-     The slide is on `bottom` rather than on a transform, and that is not a
-     stylistic choice: any transform here would make this button the containing
-     block for the hint below, which is positioned `fixed` from cursor
-     coordinates. It would then be placed relative to the button and land far
-     off the screen. */
-  bottom: 0.6rem;
-  opacity: 0;
-  visibility: hidden;
-  transition:
-    opacity 0.45s ease,
-    bottom 0.55s var(--ease-out),
-    visibility 0s linear 0.55s;
-}
-
-.pause-toggle.is-visible {
-  bottom: 1.15rem;
-  opacity: 0.85;
-  visibility: visible;
-  transition-delay: 0s;
-}
-
-.pause-toggle.is-visible:hover,
-.pause-toggle.is-visible:focus-visible {
-  opacity: 1;
-}
-
-/* The note that follows the cursor across the play button. Its position comes
-   from two custom properties the button writes on pointer move; it rides just
-   above and to the right, which keeps it off the pointer and off the button's
-   own label, and always on screen from a control this near the bottom left. */
-.pause-toggle__hint {
-  position: fixed;
-  z-index: calc(var(--z-toggle) + 1);
-  left: var(--x, var(--pad-x));
-  top: var(--y, 50dvh);
-  max-width: 16rem;
-  padding: 0.5rem 0.7rem;
-  border: 1px solid var(--line);
-  background: var(--surface);
-  box-shadow: 0 6px 20px rgba(8, 13, 20, 0.16);
-  color: var(--text);
-  /* The button is small, spaced, shadowed capitals; a sentence is none of
-     those things. */
-  font-size: 0.72rem;
-  font-weight: 500;
-  letter-spacing: 0;
-  line-height: 1.35;
-  text-align: left;
-  text-shadow: none;
-  text-transform: none;
-  /* It comes out of the air rather than switching on: blurred and low and a
-     little small, with its shadow spread wide like haze, then drawing itself
-     together as it settles. Going the other way it thins back out into the
-     same mist. The site does this trick elsewhere - the banks behind the page
-     and the haze behind the hero titles - so the note arrives in the same
-     weather as everything else. */
-  opacity: 0;
-  /* Soft focus rather than a smear. A heavy blur here reads as something wrong
-     with your eyes rather than as weather, and the eye strains at it while it
-     resolves - so the blur is light, and it clears sooner than the rest of the
-     movement settles. */
-  filter: blur(5px);
-  transform: translate(0.9rem, calc(-100% - 0.15rem)) scale(0.97);
-  box-shadow: 0 0 26px 9px rgba(8, 13, 20, 0.08);
-  transition:
-    opacity 0.45s ease,
-    filter 0.34s var(--ease-out),
-    transform 0.62s var(--ease-out),
-    box-shadow 0.62s var(--ease-out);
-  pointer-events: none;
-}
-
-/* Only while the button is offering to start things - aria-pressed is already
-   carrying exactly that fact, so the note needs no state of its own. The
-   element stays in the page either way, which is what keeps its position. */
-.pause-toggle[aria-pressed='true']:hover .pause-toggle__hint {
-  opacity: 1;
-  filter: blur(0);
-  transform: translate(0.9rem, calc(-100% - 0.8rem)) scale(1);
-  box-shadow: 0 6px 20px rgba(8, 13, 20, 0.16);
-}
-
-.pause-toggle:active {
-  transform: translateY(1px);
-}
-
-/* Two bars when it will pause, one triangle when it will play. */
-.pause-toggle__mark {
-  width: 0.55rem;
-  height: 0.6rem;
-  border-inline: 2px solid currentColor;
-}
-
-.pause-toggle[aria-pressed='true'] .pause-toggle__mark {
-  width: 0;
-  height: 0;
-  border-block: 0.32rem solid transparent;
-  border-left: 0.55rem solid currentColor;
-  border-right: 0;
-}
-
-/* ---------------------------------------------------------------------------
-   The landing. The Unicorn scene is kept exactly as the opening experience;
-   everything here is placed around it.
+   The landing. The group photograph fills the fold; the titles sit in a row
+   along the top of it, over the bare wall above the group.
    --------------------------------------------------------------------------- */
 .landing {
+  /* Where the pointer is across the fold, written by Landing.jsx and read by
+     the photograph below. */
+  --mx: 0;
+  --my: 0;
   position: relative;
   min-height: 100dvh;
   isolation: isolate;
@@ -350,9 +225,27 @@
 
 .landing__sky,
 .landing__depth,
-.landing__scene {
+.landing__open,
+.landing__photo,
+.landing__shade {
   position: absolute;
   inset: 0;
+}
+
+/* The photograph became a button; it should still look exactly like a
+   photograph. */
+.landing__open {
+  display: block;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.landing__open:focus-visible {
+  outline-color: #ffffff;
+  outline-offset: -6px;
 }
 
 .landing__sky {
@@ -369,24 +262,103 @@
   will-change: transform;
 }
 
-/* The scene fades up over the sky once it has actually loaded, instead of
-   popping in. */
-.landing__scene {
+/* The photograph fades up and settles in over the sky once it has actually
+   loaded, instead of popping in - held a little large on the way, the way
+   the group shot arrives in Medlemmer. */
+.landing__photo {
   opacity: 0;
-  transition: opacity 1.6s ease;
+  transform: scale(1.08);
+  transition:
+    opacity 1.6s ease,
+    transform 1.9s var(--ease-out);
 }
 
-.landing__scene.is-loaded {
+.landing__photo.is-loaded {
+  opacity: 1;
+  transform: none;
+}
+
+/* Full bleed. The picture is much wider than it is tall, so a narrow frame
+   sees only the middle of it; the position keeps the faces, not the wall
+   above them, in whatever is left.
+
+   Held a little larger than the frame, so it can follow the pointer without
+   showing an edge. It moves a little more than a portrait does, and no more
+   than that: on a picture this size a few pixels already read as a lot.
+
+   One rule for both the photograph and the cutout of the group over it: they
+   are the same picture twice and have to land on exactly the same pixels, or
+   the group would show a second edge. */
+.landing__photo img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 68%;
+  transform: translate(calc(var(--mx) * -9px), calc(var(--my) * -9px)) scale(1.06);
+  transition: transform 0.6s var(--ease-out);
+}
+
+/* And it swells a touch under the pointer, as the portraits do. Only where
+   there is a pointer to hover with: a finger would leave it stuck swollen
+   after the tap. */
+@media (hover: hover) {
+  .landing:hover .landing__photo img,
+  .landing__open:focus-visible .landing__photo img {
+    transform: translate(calc(var(--mx) * -9px), calc(var(--my) * -9px)) scale(1.07);
+  }
+}
+
+/* The word behind the group. It sits on the wall above the sofa, low enough
+   for the heads to cover its lower half, and follows the pointer less than
+   the group in front of it does - the layer further back moves less, which
+   is what makes it read as further back. `translate` centres it and carries
+   its arrival; `transform` is the pointer's, so the two never fight. */
+.landing__word {
+  position: absolute;
+  top: 46%;
+  left: 50%;
+  translate: -50% -50%;
+  color: #ffffff;
+  font-family: var(--font-display);
+  font-size: clamp(4.5rem, 19vw, 20rem);
+  font-stretch: 104%;
+  font-weight: 610;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-shadow: 0 2px 40px rgba(13, 51, 80, 0.22);
+  transform: translate(calc(var(--mx) * -4px), calc(var(--my) * -4px));
+  opacity: 0;
+  transition:
+    transform 0.6s var(--ease-out),
+    opacity 1.4s ease,
+    translate 1.8s var(--ease-out);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* It rises up from behind the group once the cutout is there to hide the
+   start of that. */
+@media (prefers-reduced-motion: no-preference) {
+  .landing__photo:not(.is-cut) .landing__word {
+    translate: -50% -28%;
+  }
+}
+
+.landing__photo.is-cut .landing__word {
   opacity: 1;
 }
 
-.landing__unicorn,
-.landing__unicorn > div,
-.landing__unicorn canvas {
-  position: absolute;
-  inset: 0;
-  width: 100% !important;
-  height: 100% !important;
+/* A little shade down from the top, so white titles read over the pale
+   wall. It lies on the wall itself, under the word and the group, so neither
+   is dimmed by it; it thins out well above the faces anyway. */
+.landing__shade {
+  background: linear-gradient(to bottom, rgba(8, 13, 20, 0.5) 0%, rgba(8, 13, 20, 0.18) 34%, transparent 58%);
+  pointer-events: none;
 }
 
 /* The bottom edge dissolves into the fog rather than ending at a line. */
@@ -401,20 +373,72 @@
   pointer-events: none;
 }
 
+/* What a click on the picture does, said once under the group. It sits in
+   the mist, above the fold's edge, and lets the pointer through to the
+   picture it describes. */
+.landing__hint {
+  position: absolute;
+  z-index: 3;
+  right: 0;
+  bottom: clamp(1.5rem, 4dvh, 2.5rem);
+  left: 0;
+  margin: 0;
+  overflow: hidden;
+  padding: 0.3em 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-family: var(--font-mono);
+  font-size: clamp(0.62rem, 0.8vw, 0.72rem);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  text-align: center;
+  text-transform: uppercase;
+  text-shadow: 0 1px 12px rgba(8, 13, 20, 0.5);
+  pointer-events: none;
+}
+
+.landing__hint-word {
+  position: relative;
+  display: inline-block;
+}
+
+/* A line under it, drawn in from the left while the picture is under the
+   pointer - the same line the titles draw when they are. */
+.landing__hint-word::after {
+  content: '';
+  position: absolute;
+  right: 0.12em;
+  bottom: -0.35em;
+  left: 0;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.7s var(--ease-out);
+}
+
+@media (hover: hover) {
+  .landing:hover .landing__hint-word::after,
+  .landing:has(.landing__open:focus-visible) .landing__hint-word::after {
+    transform: scaleX(1);
+  }
+}
+
+/* A row across the top, centred on the page. It sits where the navigation
+   will later, which is what it hands over to. */
 .hero-titles {
   position: absolute;
   z-index: 3;
-  top: 50%;
-  right: clamp(2.25rem, 3vw, 3rem);
-  width: max-content;
-  max-width: calc(100% - 5.25rem);
-  display: grid;
-  justify-items: start;
-  gap: clamp(2.75rem, 4.5vw, 5.25rem);
-  /* The individual property rather than `transform`, which the scroll
-     animates on this element. */
-  translate: 0 -50%;
-  text-align: left;
+  top: clamp(4.5rem, 11dvh, 7.5rem);
+  right: var(--pad-x);
+  left: var(--pad-x);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  column-gap: clamp(1.75rem, 3.2vw, 3.75rem);
+  row-gap: 1.1rem;
+  text-align: center;
   color: rgba(255, 255, 255, 0.96);
 }
 
@@ -425,7 +449,8 @@
   display: block;
   max-width: 100%;
   font-family: var(--font-display);
-  font-size: clamp(2.4rem, 4.4vw, 4.9rem);
+  /* Sized so all four stand on one line across a laptop screen. */
+  font-size: clamp(1.6rem, 2.9vw, 3.2rem);
   font-stretch: 104%;
   font-weight: 610;
   letter-spacing: -0.06em;
@@ -512,6 +537,16 @@
   .is-ready .hero-title::before {
     opacity: 0.78;
   }
+
+  /* The hint comes up last, after the fourth title. */
+  .landing__hint-word {
+    transform: translateY(160%);
+    transition: transform 1.3s var(--ease-out) calc(4 * 95ms + 420ms);
+  }
+
+  .is-ready .landing__hint-word {
+    transform: none;
+  }
 }
 
 /* ---------------------------------------------------------------------------
@@ -595,26 +630,26 @@
     letter-spacing: -0.04em;
   }
 
-  .pause-toggle {
-    bottom: 0.85rem;
-    font-size: 0.64rem;
-  }
-
+  /* Still centred, still along the top; the row wraps into two on a phone. */
   .hero-titles {
-    top: auto;
-    right: 1.4rem;
-    bottom: 3.6rem;
-    left: auto;
-    width: max-content;
-    max-width: calc(100% - 2.8rem);
-    justify-items: start;
-    gap: 1.8rem;
-    translate: none;
-    text-align: left;
+    top: clamp(3.75rem, 9dvh, 5.5rem);
+    right: 1.25rem;
+    left: 1.25rem;
+    column-gap: 2rem;
+    row-gap: 0.8rem;
   }
 
+  /* Sized so Bedrift and Ambisjonsnivå share the second line on a phone. */
   .hero-title {
-    font-size: clamp(1.8rem, 8.5vw, 3.15rem);
+    font-size: clamp(1.35rem, 6vw, 2rem);
+  }
+
+  /* Nearly the width of the screen: a phone shows only the middle of the
+     group, and the word should still reach past them on both sides. A little
+     lower too, so the one head in the middle covers the bottom of it. */
+  .landing__word {
+    top: 51%;
+    font-size: clamp(4rem, 24vw, 7rem);
   }
 
   .landing__mist {
