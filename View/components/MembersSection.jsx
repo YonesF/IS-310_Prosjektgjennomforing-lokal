@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { members } from '../../Model/site.js'
+import { follow, release } from '../lib/follow.js'
 import { useMotion } from '../lib/motion.jsx'
 import { useReveal } from '../lib/reveal.jsx'
 import { cx } from '../lib/cx.js'
 import MemberPanel from './MemberPanel.jsx'
-import GroupPanel from './GroupPanel.jsx'
+import { useGroupPanel } from './GroupPanel.jsx'
 
 /* ===========================================================================
    Medlemmer: the group above, the five of them below.
@@ -79,23 +80,6 @@ function GroupPhotos({ onOpen }) {
   )
 }
 
-/* The portrait follows the pointer by a few pixels inside its frame. Written
-   straight to a custom property on the element rather than through state, so
-   the whole thing is one style write and never re-renders anything. */
-function follow(event) {
-  if (event.pointerType !== 'mouse') return
-  const node = event.currentTarget
-  const rect = node.getBoundingClientRect()
-  node.style.setProperty('--mx', ((event.clientX - rect.left) / rect.width - 0.5).toFixed(3))
-  node.style.setProperty('--my', ((event.clientY - rect.top) / rect.height - 0.5).toFixed(3))
-}
-
-function release(event) {
-  const node = event.currentTarget
-  node.style.setProperty('--mx', '0')
-  node.style.setProperty('--my', '0')
-}
-
 function Portrait({ person, index, onOpen }) {
   const [ref, inView] = useReveal()
   const { still } = useMotion()
@@ -145,13 +129,13 @@ export default function MembersSection() {
      what changes, not the panel. */
   const [opened, setOpened] = useState(null)
 
-  /* And whether the group's own panel is up. Kept apart from the portraits so
-     opening one never has to reason about the other. */
-  const [groupOpen, setGroupOpen] = useState(false)
+  /* The group's own panel is shared with the landing photograph, which opens
+     the same one, so it lives above both rather than here. */
+  const openGroup = useGroupPanel()
 
   return (
     <div className="members">
-      <GroupPhotos onOpen={() => setGroupOpen(true)} />
+      <GroupPhotos onOpen={openGroup} />
 
       <ul className="members__row">
         {members.people.map((person, index) => (
@@ -165,7 +149,6 @@ export default function MembersSection() {
       </ul>
 
       <MemberPanel person={opened} onClose={() => setOpened(null)} />
-      <GroupPanel open={groupOpen} onClose={() => setGroupOpen(false)} />
     </div>
   )
 }
