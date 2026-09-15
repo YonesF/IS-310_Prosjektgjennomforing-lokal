@@ -42,7 +42,6 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          if (id.includes('unicornstudio')) return 'unicorn'
           /* The ridge scene is only fetched near its own section, so three and
              its renderer stay out of the entry chunk. */
           if (id.includes('node_modules/three/') || id.includes('@react-three/')) return 'three'
