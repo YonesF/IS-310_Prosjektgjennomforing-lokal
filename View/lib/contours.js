@@ -4,7 +4,7 @@ import { ridgeHeight, sampleRoute, SUMMIT } from './heightField.js'
    The landscape drawn flat: the contour map of the ridge, as SVG paths.
 
    Marching squares over the same height field the 3D scene raises, at the
-   same band spacing its shader draws, so the lines on the plan's map are the
+   same band spacing its shader draws, so the lines behind the video are the
    lines the visitor later sees standing up in Ambisjonsnivå. Computed once,
    the first time something asks for it - a few milliseconds of arithmetic.
    =========================================================================== */
