@@ -48,7 +48,7 @@ export default function SiteNav() {
       inert={!visible}
     >
       <a className="site-nav__brand" href="#" aria-label={controls.top}>
-        {site.group}
+        {site.name}
       </a>
 
       <ul className="site-nav__links">
