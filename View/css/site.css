@@ -76,7 +76,7 @@
 .fog__bank--b {
   right: -22vmax;
   bottom: -26vmax;
-  background: radial-gradient(closest-side, rgba(191, 224, 255, 0.15), rgba(191, 224, 255, 0));
+  background: radial-gradient(closest-side, rgba(127, 166, 255, 0.13), rgba(127, 166, 255, 0));
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -165,9 +165,8 @@
   display: inline-block;
   padding: 0.5rem 0.1rem;
   font-family: var(--font-display);
-  font-stretch: 104%;
-  font-weight: 610;
-  letter-spacing: -0.035em;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   line-height: 1;
   text-transform: uppercase;
 }
@@ -179,7 +178,7 @@
   /* Its column is only as wide as the one opposite, which is what keeps the
      links on the middle of the page. The name must not wrap inside it. */
   white-space: nowrap;
-  text-shadow: 0 0 24px rgba(191, 224, 255, 0.35);
+  text-shadow: 0 0 24px rgba(127, 166, 255, 0.35);
 }
 
 .site-nav__links {
@@ -225,27 +224,10 @@
 
 .landing__sky,
 .landing__depth,
-.landing__open,
 .landing__photo,
 .landing__shade {
   position: absolute;
   inset: 0;
-}
-
-/* The photograph became a button; it should still look exactly like a
-   photograph. */
-.landing__open {
-  display: block;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: inherit;
-  cursor: pointer;
-}
-
-.landing__open:focus-visible {
-  outline-color: #ffffff;
-  outline-offset: -6px;
 }
 
 .landing__sky {
@@ -305,8 +287,7 @@
    there is a pointer to hover with: a finger would leave it stuck swollen
    after the tap. */
 @media (hover: hover) {
-  .landing:hover .landing__photo img,
-  .landing__open:focus-visible .landing__photo img {
+  .landing:hover .landing__photo img {
     transform: translate(calc(var(--mx) * -9px), calc(var(--my) * -9px)) scale(1.07);
   }
 }
@@ -324,9 +305,8 @@
   color: #ffffff;
   font-family: var(--font-display);
   font-size: clamp(4.5rem, 19vw, 20rem);
-  font-stretch: 104%;
-  font-weight: 610;
-  letter-spacing: -0.05em;
+  font-weight: 800;
+  letter-spacing: -0.04em;
   line-height: 1;
   text-transform: uppercase;
   white-space: nowrap;
@@ -373,54 +353,81 @@
   pointer-events: none;
 }
 
-/* What a click on the picture does, said once under the group. It sits in
-   the mist, above the fold's edge, and lets the pointer through to the
-   picture it describes. */
+/* The way in to the panel about the group: a note saying so in a small
+   square box, over a chevron pointing up, the way the panel comes in. It sits
+   in the mist, above the fold's edge. The wrapper is clipped for the
+   button's arrival, and keeps a little room above for the lift on hover. */
 .landing__hint {
   position: absolute;
   z-index: 3;
   right: 0;
-  bottom: clamp(1.5rem, 4dvh, 2.5rem);
+  bottom: clamp(1.25rem, 3.5dvh, 2.25rem);
   left: 0;
-  margin: 0;
+  display: flex;
+  justify-content: center;
   overflow: hidden;
-  padding: 0.3em 0;
-  color: rgba(255, 255, 255, 0.9);
+  padding: 0.5rem 0 0.35rem;
+}
+
+/* The button is the note and the mark together, with room around both so a
+   finger finds it. Nothing of a button's own appearance: the box the note
+   sits in is the only edge drawn. */
+.landing__open {
+  display: grid;
+  justify-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 0.9rem 0.45rem;
+  border: 0;
+  background: none;
+  color: rgba(255, 255, 255, 0.92);
+  filter: drop-shadow(0 1px 10px rgba(8, 13, 20, 0.5));
+  cursor: pointer;
+}
+
+.landing__open:focus-visible {
+  outline-offset: 2px;
+}
+
+/* The note: a small square box in the site's label setting, glassed a little
+   over the mist so it reads on whatever the photograph has there. It
+   brightens while the button is under the pointer. */
+.landing__open-note {
+  padding: 0.55rem 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(8, 13, 20, 0.38);
   font-family: var(--font-mono);
-  font-size: clamp(0.62rem, 0.8vw, 0.72rem);
+  font-size: clamp(0.64rem, 0.8vw, 0.74rem);
   font-weight: 600;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   line-height: 1;
-  text-align: center;
   text-transform: uppercase;
-  text-shadow: 0 1px 12px rgba(8, 13, 20, 0.5);
-  pointer-events: none;
+  white-space: nowrap;
+  transition:
+    border-color 0.3s ease,
+    background 0.3s ease;
 }
 
-.landing__hint-word {
-  position: relative;
-  display: inline-block;
+.landing__open:hover .landing__open-note,
+.landing__open:focus-visible .landing__open-note {
+  border-color: rgba(255, 255, 255, 0.8);
+  background: rgba(8, 13, 20, 0.55);
 }
 
-/* A line under it, drawn in from the left while the picture is under the
-   pointer - the same line the titles draw when they are. */
-.landing__hint-word::after {
-  content: '';
-  position: absolute;
-  right: 0.12em;
-  bottom: -0.35em;
-  left: 0;
-  height: 1px;
-  background: currentColor;
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.7s var(--ease-out);
+/* `translate` is the hover's and `transform` the arrival's, so the two never
+   fight over one property. */
+.landing__hint-mark {
+  display: block;
+  width: clamp(2rem, 2.6vw, 2.75rem);
+  height: auto;
+  transition: translate 0.6s var(--ease-out);
 }
 
+/* The mark lifts a little while the button is under the pointer - the same
+   way the panel will. */
 @media (hover: hover) {
-  .landing:hover .landing__hint-word::after,
-  .landing:has(.landing__open:focus-visible) .landing__hint-word::after {
-    transform: scaleX(1);
+  .landing__open:hover .landing__hint-mark,
+  .landing__open:focus-visible .landing__hint-mark {
+    translate: 0 -0.3rem;
   }
 }
 
@@ -429,7 +436,7 @@
 .hero-titles {
   position: absolute;
   z-index: 3;
-  top: clamp(4.5rem, 11dvh, 7.5rem);
+  top: clamp(3rem, 7.5dvh, 5rem);
   right: var(--pad-x);
   left: var(--pad-x);
   display: flex;
@@ -451,9 +458,8 @@
   font-family: var(--font-display);
   /* Sized so all four stand on one line across a laptop screen. */
   font-size: clamp(1.6rem, 2.9vw, 3.2rem);
-  font-stretch: 104%;
-  font-weight: 610;
-  letter-spacing: -0.06em;
+  font-weight: 700;
+  letter-spacing: -0.04em;
   line-height: 0.88;
   text-transform: uppercase;
   text-shadow: 0 2px 18px rgba(13, 51, 80, 0.18);
@@ -485,7 +491,8 @@
   display: block;
 }
 
-/* A line under the title in hand, drawn in from the left. */
+/* A line under the title in hand, drawn out from the middle both ways at
+   once. */
 .hero-title__word::after {
   content: '';
   position: absolute;
@@ -495,7 +502,7 @@
   height: 0.06em;
   background: currentColor;
   transform: scaleX(0);
-  transform-origin: left;
+  transform-origin: center;
   transition: transform 0.7s var(--ease-out);
 }
 
@@ -538,13 +545,13 @@
     opacity: 0.78;
   }
 
-  /* The hint comes up last, after the fourth title. */
-  .landing__hint-word {
-    transform: translateY(160%);
+  /* The button comes up last, after the fourth title. */
+  .landing__open {
+    transform: translateY(120%);
     transition: transform 1.3s var(--ease-out) calc(4 * 95ms + 420ms);
   }
 
-  .is-ready .landing__hint-word {
+  .is-ready .landing__open {
     transform: none;
   }
 }
@@ -574,16 +581,15 @@
   color: var(--text);
   font-family: var(--font-display);
   font-size: clamp(2.2rem, 5vw, 5rem);
-  font-stretch: 104%;
-  font-weight: 610;
-  letter-spacing: -0.06em;
+  font-weight: 700;
+  letter-spacing: -0.04em;
   line-height: 0.88;
   text-align: center;
   text-transform: uppercase;
   text-wrap: balance;
   /* A filter rather than a text shadow: the words sit inside clipped masks
      while they arrive, and a shadow drawn in there would be cut to boxes. */
-  filter: drop-shadow(0 0 22px rgba(191, 224, 255, 0.28));
+  filter: drop-shadow(0 0 22px rgba(127, 166, 255, 0.26));
 }
 
 /* A section with nothing in it yet holds its place, the way the fifth
@@ -632,7 +638,7 @@
 
   /* Still centred, still along the top; the row wraps into two on a phone. */
   .hero-titles {
-    top: clamp(3.75rem, 9dvh, 5.5rem);
+    top: clamp(2.75rem, 6.5dvh, 4rem);
     right: 1.25rem;
     left: 1.25rem;
     column-gap: 2rem;
