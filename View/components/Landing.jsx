@@ -1,19 +1,21 @@
 import { useRef, useState } from 'react'
-import { controls, landing, members, sections, site } from '../../Model/site.js'
+import { controls, landing, sections, site } from '../../Model/site.js'
 import { follow, release } from '../lib/follow.js'
 import { gsap, useGSAP } from '../lib/gsap.js'
 import { useMotion } from '../lib/motion.jsx'
 import { cx } from '../lib/cx.js'
+import Chevron from './Chevron.jsx'
 import { useGroupPanel } from './GroupPanel.jsx'
 
 /* ===========================================================================
    The landing: the group photograph, and the four titles that are the way in.
 
    The photograph fills the fold and settles in over the sky once it has
-   arrived. It behaves like every other picture of the group: it follows the
-   pointer a little inside its frame, swells under it, and is itself the
-   control that opens the panel about who we are - the same one the group
-   shot in Medlemmer opens.
+   arrived. It follows the pointer a little inside its frame and swells under
+   it, the way every picture of the group does. Under it sits the one way in
+   to the panel about who we are - the same one the group shot in Medlemmer
+   opens - a small button that says what it does, so a click on the picture
+   itself opens nothing.
 
    The titles sit in a row along the top, over the bare wall above the group:
    they rise out of their lines once the cover lifts, they lean toward the
@@ -102,58 +104,59 @@ export default function Landing() {
       <div className="landing__sky" aria-hidden="true" />
 
       <div className="landing__depth" ref={depth}>
-        {/* The whole photograph is the control, the way the group shot below
-            is. It carries its own name, so the button says what it does
-            rather than only what it shows; the picture itself is described
-            on the image. */}
-        <button type="button" className="landing__open" aria-label={members.group.panel.open} onClick={openGroup}>
-          <div className={cx('landing__photo', loaded && 'is-loaded', cut && 'is-cut')}>
-            <img
-              src={landing.photo.src}
-              alt={landing.photo.alt}
-              width={landing.photo.width}
-              height={landing.photo.height}
-              /* The first thing on the page: nothing should be fetched ahead
-                 of it. */
-              fetchPriority="high"
-              decoding="async"
-              ref={whenComplete(setLoaded)}
-              onLoad={() => setLoaded(true)}
-            />
-            <div className="landing__shade" aria-hidden="true" />
+        {/* The photograph is not the control here - the button under the
+            group is, so a stray click on the picture opens nothing. */}
+        <div className={cx('landing__photo', loaded && 'is-loaded', cut && 'is-cut')}>
+          <img
+            src={landing.photo.src}
+            alt={landing.photo.alt}
+            width={landing.photo.width}
+            height={landing.photo.height}
+            /* The first thing on the page: nothing should be fetched ahead
+               of it. */
+            fetchPriority="high"
+            decoding="async"
+            ref={whenComplete(setLoaded)}
+            onLoad={() => setLoaded(true)}
+          />
+          <div className="landing__shade" aria-hidden="true" />
 
-            {/* Layers in document order: the photograph, the shade that
-                darkens the wall under the titles, the word, and the group cut
-                out of the same photograph laid over all of it - so the word
-                reads as standing behind them, in front of the wall. The
-                cutout is the same picture again and says nothing new. */}
-            <span className="landing__word" aria-hidden="true">
-              {landing.word}
-            </span>
-            <img
-              className="landing__front"
-              src={landing.front.src}
-              alt=""
-              width={landing.front.width}
-              height={landing.front.height}
-              fetchPriority="high"
-              decoding="async"
-              ref={whenComplete(setCut)}
-              onLoad={() => setCut(true)}
-            />
-          </div>
-        </button>
+          {/* Layers in document order: the photograph, the shade that
+              darkens the wall under the titles, the word, and the group cut
+              out of the same photograph laid over all of it - so the word
+              reads as standing behind them, in front of the wall. The
+              cutout is the same picture again and says nothing new. */}
+          <span className="landing__word" aria-hidden="true">
+            {landing.word}
+          </span>
+          <img
+            className="landing__front"
+            src={landing.front.src}
+            alt=""
+            width={landing.front.width}
+            height={landing.front.height}
+            fetchPriority="high"
+            decoding="async"
+            ref={whenComplete(setCut)}
+            onLoad={() => setCut(true)}
+          />
+        </div>
       </div>
 
       <h1 id="landing-title" className="visually-hidden">
         {site.group} - {site.tagline.toLowerCase()}
       </h1>
 
-      {/* What a click will do, said once, small, under the group. The button
-          already says it to assistive technology; this is for the eye. */}
-      <p className="landing__hint" aria-hidden="true" ref={hint}>
-        <span className="landing__hint-word">{members.group.panel.open}</span>
-      </p>
+      {/* The one way in to the panel from here: a note saying so, over a
+          chevron pointing the way the panel comes in. The note is the
+          button's name; the chevron only draws it. The wrapper is what the
+          scroll moves and what clips the arrival. */}
+      <div className="landing__hint" ref={hint}>
+        <button type="button" className="landing__open" onClick={openGroup}>
+          <span className="landing__open-note">{landing.cta}</span>
+          <Chevron className="landing__hint-mark" direction="up" />
+        </button>
+      </div>
 
       <nav className="hero-titles" aria-label={controls.heroNav} ref={titles}>
         {sections.map((section, index) => (
