@@ -15,6 +15,9 @@ const media = (file) => `${import.meta.env.BASE_URL}media/${file}`
    that carried them is gone. They are kept for whenever the page wants them
    back. */
 export const site = {
+  /* What the team calls itself - the name in the navigation. `group` is what
+     the course calls it. */
+  name: 'SYMITO',
   group: 'Gruppe 11',
   course: 'IS-310 Prosjektgjennomføring',
   email: 'gruppe11@is310.no',
@@ -44,6 +47,9 @@ export const landing = {
     height: 1085,
   },
   word: 'SYMITO',
+  /* The note on the button under the group, the one way in to the panel
+     about who we are from here. */
+  cta: 'Trykk her for å lese mer om oss',
 }
 
 /* The group shot cycles through these frames, crossfading between them; add or
@@ -54,7 +60,7 @@ export const members = {
   group: {
     label: 'Her er vi samlet hos Kartverket',
     /* Trykk på gruppebildet, og dette panelet kommer opp nedenfra. `intro` er
-       ingressen og står litt større; resten følger som vanlige avsnitt. Alle
+       det første avsnittet; resten følger etter, i samme størrelse. Alle
        lyser seg fram ord for ord når panelet rulles, slik beskrivelsene i
        portrettpanelene gjør. Tomme avsnitt hoppes over, og har ingenting fått
        tekst ennå, sier panelet bare at det kommer. */
