@@ -4,6 +4,7 @@ import { follow, release } from '../lib/follow.js'
 import { useMotion } from '../lib/motion.jsx'
 import { useReveal } from '../lib/reveal.jsx'
 import { cx } from '../lib/cx.js'
+import Chevron from './Chevron.jsx'
 import MemberPanel from './MemberPanel.jsx'
 import { useGroupPanel } from './GroupPanel.jsx'
 
@@ -115,6 +116,9 @@ function Portrait({ person, index, onOpen }) {
                 loading="lazy"
                 decoding="async"
               />
+              {/* The panel slides in from the right, so the mark points the
+                  way it will travel. */}
+              <Chevron className="member__hint" direction="left" />
             </div>
             <figcaption className="member__name">{person.name}</figcaption>
           </figure>
