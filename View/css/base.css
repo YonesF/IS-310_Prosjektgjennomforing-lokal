@@ -1,53 +1,12 @@
-/* Fivo Sans Modern, in the four weights that exist, served from Unicorn
-   Studio's font host - a leftover of the published scene that used to open
-   the site, which was set in this face.
-
-   Worth replacing with a licensed woff2 under public/fonts when you have one:
-   this is somebody else's asset host, it can move its files whenever it likes,
-   and woff2 is roughly half the size of these otf files. If it ever does move,
-   every rule falls through to Anybody and the site still reads correctly. */
+/* Manrope, the one face the site is set in: a geometric grotesque with the
+   plain, well-built look of the companies the group wants to be read
+   alongside. One variable file under public/fonts carries every weight; the
+   latin subset covers Norwegian. Licensed under the SIL Open Font License. */
 @font-face {
-  font-family: 'Fivo Sans Modern';
-  src: url('https://assets.unicorn.studio/fonts/studio_picks/FivoSansModern/FivoSansModern-Regular.otf')
-    format('opentype');
+  font-family: 'Manrope';
+  src: url('/fonts/manrope-latin.woff2') format('woff2');
   font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Fivo Sans Modern';
-  src: url('https://assets.unicorn.studio/fonts/studio_picks/FivoSansModern/FivoSansModern-Medium.otf')
-    format('opentype');
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Fivo Sans Modern';
-  src: url('https://assets.unicorn.studio/fonts/studio_picks/FivoSansModern/FivoSansModern-Bold.otf')
-    format('opentype');
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Fivo Sans Modern';
-  src: url('https://assets.unicorn.studio/fonts/studio_picks/FivoSansModern/FivoSansModern-Heavy.otf')
-    format('opentype');
-  font-style: normal;
-  font-weight: 900;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Anybody';
-  src: url('/fonts/anybody-latin.woff2') format('woff2');
-  font-style: normal;
-  font-weight: 300 900;
-  font-stretch: 75% 125%;
+  font-weight: 200 800;
   font-display: swap;
 }
 
@@ -62,10 +21,17 @@
 /* ---------------------------------------------------------------------------
    Tokens.
 
-   The page is weather: the landing scene's sky and snow hand over to a fog
-   the rest of the page sits in, white type throughout, and one accent - the
-   ice-blue the contours and the route are drawn in. Sharp corners everywhere;
-   the site is set like a map sheet, and a map sheet has no rounded corners.
+   The palette is one deep night and one colour. The page sits on a navy
+   canvas - dark and blue rather than grey, so the surfaces lifted from it have
+   room to separate and one saturated colour can carry the weight. That colour
+   is cobalt: the blue companies already trust, at a depth that reads as
+   assured rather than loud. It is the brand, and it is the only saturated thing
+   on the page, so wherever it appears it is the thing to press. Everything
+   else is white type, and a lighter cobalt for the smaller words that belong
+   to the brand - labels, links, the route drawn up the ridge.
+
+   Sharp corners everywhere; the site is set like a map sheet, and a map sheet
+   has no rounded corners.
    --------------------------------------------------------------------------- */
 :root {
   /* The screen this site is drawn for. Everything below is unchanged on screens
@@ -76,27 +42,55 @@
   --design-width: 1600;
   --design-height: 900;
 
-  --surface: #55606e;
-  --surface-2: #5d6876;
-  --surface-strong: #6a7684;
-  --fog: #8e99a7;
+  /* The ground, and the two steps up from it: a panel's sheet, then a frame
+     or a card. A step is a real step, so a card reads as lifted, not as a
+     slightly different grey. */
+  --surface: #131c2f;
+  --surface-2: #182540;
+  --surface-strong: #21304c;
+  --fog: #32456a;
   --sky: #e8f2fc;
-  --ink: #0f151c;
-  --text: #f3f6f9;
-  --text-muted: #dce2e9;
-  --accent: #bfe0ff;
-  --line: rgba(243, 246, 249, 0.24);
-  --line-soft: rgba(243, 246, 249, 0.1);
-  --map-line: rgba(205, 228, 255, 0.28);
-  --map-major: rgba(215, 234, 255, 0.55);
-  --shadow: 8, 13, 20;
+  --ink: #0a1020;
 
-  --font-display: 'Fivo Sans Modern', 'Anybody', 'Arial Narrow', system-ui, sans-serif;
-  --font-body: 'Fivo Sans Modern', 'Anybody', system-ui, sans-serif;
+  --text: #f4f7fb;
+  --text-muted: #b3bdcd;
+
+  /* The brand. --brand is the fill of anything that is an action - and its
+     hover lifts lighter, its press goes darker, the way a dark interface does
+     it. --accent is the same blue with enough light in it to be read as small
+     type on the canvas; --brand-soft is the tint a hovered outline fills with.
+     --cta is the action colour by name, so a page can reach for it without
+     knowing it happens to be the brand. */
+  --brand: #2a5fe8;
+  --brand-hover: #3b70f5;
+  --brand-active: #2150d0;
+  --brand-soft: rgba(42, 95, 232, 0.16);
+  --accent: #7fa6ff;
+  --on-brand: #ffffff;
+  --cta: var(--brand);
+  --cta-hover: var(--brand-hover);
+  --cta-active: var(--brand-active);
+  --on-cta: var(--on-brand);
+
+  --line: rgba(244, 247, 251, 0.16);
+  --line-soft: rgba(244, 247, 251, 0.08);
+  --map-line: rgba(127, 166, 255, 0.24);
+  --map-major: rgba(127, 166, 255, 0.5);
+  --shadow: 6, 12, 26;
+
+  /* For whatever asks a visitor to notice a state: a form that took, a field
+     that needs another look, something that failed. Tuned to sit beside the
+     cobalt and to read on the canvas. Nothing on the page uses them yet. */
+  --success: #34c784;
+  --warning: #f2b441;
+  --danger: #f0596b;
+
+  --font-display: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-body: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
   /* The small tracked labels too, since the ask was for one face everywhere.
      Swap this line back to 'JetBrains Mono' first if you want their monospaced
      character back. */
-  --font-mono: 'Fivo Sans Modern', 'JetBrains Mono', ui-monospace, monospace;
+  --font-mono: 'Manrope', 'JetBrains Mono', ui-monospace, monospace;
 
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
@@ -116,22 +110,20 @@
   color-scheme: dark;
 }
 
-/* Night: the same fog, later in the day. */
+/* Night: the same navy, a step deeper. Both schemes are dark - the site is
+   drawn for white type on a night ground - and this one only takes the canvas
+   further down for a visitor who asked for the dark side of things. */
 @media (prefers-color-scheme: dark) {
   :root {
-    --surface: #182230;
-    --surface-2: #1c2836;
-    --surface-strong: #283649;
-    --fog: #34455a;
-    --ink: #080e13;
-    --text: #eef2f6;
-    --text-muted: #c4cdd7;
-    --accent: #a8d4ff;
-    --line: rgba(238, 242, 246, 0.2);
-    --line-soft: rgba(238, 242, 246, 0.08);
-    --map-line: rgba(168, 212, 255, 0.3);
-    --map-major: rgba(168, 212, 255, 0.58);
-    --shadow: 0, 0, 0;
+    --surface: #0d1526;
+    --surface-2: #121c31;
+    --surface-strong: #1a2740;
+    --fog: #2a3a57;
+    --ink: #070b14;
+    --text-muted: #a9b4c6;
+    --line: rgba(244, 247, 251, 0.14);
+    --line-soft: rgba(244, 247, 251, 0.07);
+    --shadow: 3, 7, 18;
   }
 }
 
@@ -211,8 +203,11 @@ button {
   color: inherit;
 }
 
+/* The ring is the brand's own blue, so a keyboard finds the same colour the
+   pointer does. Over a photograph it is set to white instead, where this blue
+   would sink into the picture. */
 :focus-visible {
-  outline: 2px solid currentColor;
+  outline: 2px solid var(--accent);
   outline-offset: 4px;
 }
 
@@ -238,8 +233,8 @@ main {
 }
 
 ::selection {
-  background: var(--accent);
-  color: var(--ink);
+  background: var(--brand);
+  color: var(--on-brand);
 }
 
 /* ---------------------------------------------------------------------------
@@ -248,9 +243,8 @@ main {
    --------------------------------------------------------------------------- */
 .display {
   font-family: var(--font-display);
-  font-stretch: 104%;
-  font-weight: 610;
-  letter-spacing: -0.06em;
+  font-weight: 700;
+  letter-spacing: -0.04em;
   line-height: 0.88;
   text-transform: uppercase;
   text-wrap: balance;
