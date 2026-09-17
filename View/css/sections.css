@@ -146,11 +146,34 @@
 }
 
 .member:hover .member__photo {
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35), 0 0 48px rgba(191, 224, 255, 0.28);
+  box-shadow: 0 0 0 1px rgba(127, 166, 255, 0.55), 0 0 48px rgba(42, 95, 232, 0.35);
 }
 
 .member:hover .member__photo img {
   transform: translate(calc(var(--mx) * -7px), calc(var(--my) * -7px)) scale(1.1);
+}
+
+/* The mark that says the portrait opens. It sits at the right edge, halfway
+   down - the edge the panel will come in over - and points left, the way the
+   panel travels, nudging that way while the portrait is under the pointer. */
+.member__hint {
+  position: absolute;
+  top: 50%;
+  right: 0.6rem;
+  width: clamp(1.15rem, 1.7vw, 1.6rem);
+  height: auto;
+  color: rgba(255, 255, 255, 0.92);
+  filter: drop-shadow(0 1px 8px rgba(8, 13, 20, 0.55));
+  translate: 0 -50%;
+  transition: translate 0.6s var(--ease-out);
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .member:hover .member__hint,
+  .member__open:focus-visible .member__hint {
+    translate: -0.25rem -50%;
+  }
 }
 
 .member__name {
@@ -413,12 +436,12 @@
   display: inline-flex;
   align-items: baseline;
   gap: 0.45rem;
-  padding: 0.5rem 0.85rem;
+  padding: 0.55rem 0.9rem;
   border: 1px solid var(--line);
   color: var(--text);
   font-family: var(--font-body);
   font-size: 0.85rem;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1;
   text-decoration: none;
   transition:
@@ -426,15 +449,30 @@
     border-color 0.3s ease;
 }
 
+/* A real link is an action - the one thing on this page a company can do
+   about a person - so it takes the brand: filled, white type, a step lighter
+   under the pointer and a step darker under the press. The waiting ones stay
+   as outlines, so the difference is read before it is tried. */
+a.member-panel__link {
+  border-color: var(--cta);
+  background: var(--cta);
+  color: var(--on-cta);
+}
+
 a.member-panel__link:hover,
 a.member-panel__link:focus-visible {
-  border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  border-color: var(--cta-hover);
+  background: var(--cta-hover);
+}
+
+a.member-panel__link:active {
+  border-color: var(--cta-active);
+  background: var(--cta-active);
 }
 
 .member-panel__link.is-pending {
+  border-style: dashed;
   color: var(--text-muted);
-  opacity: 0.65;
 }
 
 .member-panel__link-note {
@@ -669,20 +707,17 @@ a.member-panel__link:focus-visible {
   line-height: 1.2;
 }
 
+/* One size for every paragraph, the intro included: the text is read as one
+   piece, not as a lead and its footnotes. */
 .group-panel__intro,
 .group-panel__body,
 .group-panel__empty {
   color: var(--text-muted);
   font-family: var(--font-body);
-  font-size: clamp(0.94rem, 1vw, 1.05rem);
+  font-size: clamp(1rem, 1.15vw, 1.2rem);
   font-weight: 400;
   line-height: 1.55;
   text-wrap: pretty;
-}
-
-.group-panel__intro {
-  font-size: clamp(1.05rem, 1.3vw, 1.3rem);
-  line-height: 1.5;
 }
 
 .group-panel__empty {
