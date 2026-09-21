@@ -6,7 +6,7 @@ import * as THREE from 'three'
    base.css moves every canvas with it - in both colour schemes.
    =========================================================================== */
 
-const FALLBACK = { surface: '#0d1526', text: '#f4f7fb', accent: '#7fa6ff' }
+const FALLBACK = { surface: '#ffffff', text: '#191b21', accent: '#2a5fe8' }
 
 const SRGB = { r: 0, g: 0, b: 0 }
 
