@@ -5,24 +5,21 @@ import { gsap, useGSAP } from '../lib/gsap.js'
 import { useMotion } from '../lib/motion.jsx'
 import { cx } from '../lib/cx.js'
 import Chevron from './Chevron.jsx'
-import { useGroupPanel } from './GroupPanel.jsx'
 
 /* ===========================================================================
    The landing: the group photograph, and the four titles that are the way in.
 
    The photograph fills the fold and settles in over the sky once it has
    arrived. It follows the pointer a little inside its frame and swells under
-   it, the way every picture of the group does. Under it sits the one way in
-   to the panel about who we are - the same one the group shot in Medlemmer
-   opens - a small button that says what it does, so a click on the picture
-   itself opens nothing.
+   it, the way every picture of the group does. Under it a chevron points
+   down to the rest of the page; nothing in the fold is pressed.
 
    The titles sit in a row along the top, over the bare wall above the group:
    they rise out of their lines once the cover lifts, they lean toward the
    pointer, and on the way out the photograph sinks more slowly than the page
    while the titles leave faster - the two layers at different depths is what
-   makes the fold read as space rather than as a cut. The mist along the
-   bottom edge is how the photograph hands over to the page.
+   makes the fold read as space rather than as a cut. The photograph ends
+   where the page begins, on a clean edge.
    =========================================================================== */
 
 const FINE_POINTER = '(hover: hover) and (pointer: fine)'
@@ -38,7 +35,6 @@ export default function Landing() {
   const [loaded, setLoaded] = useState(false)
   const [cut, setCut] = useState(false)
   const { still } = useMotion()
-  const openGroup = useGroupPanel()
 
   /* A picture that was already in the cache can be complete before React
      gets its load listener on; this catches that case, and the listener the
@@ -104,8 +100,6 @@ export default function Landing() {
       <div className="landing__sky" aria-hidden="true" />
 
       <div className="landing__depth" ref={depth}>
-        {/* The photograph is not the control here - the button under the
-            group is, so a stray click on the picture opens nothing. */}
         <div className={cx('landing__photo', loaded && 'is-loaded', cut && 'is-cut')}>
           <img
             src={landing.photo.src}
@@ -147,15 +141,13 @@ export default function Landing() {
         {site.group} - {site.tagline.toLowerCase()}
       </h1>
 
-      {/* The one way in to the panel from here: a note saying so, over a
-          chevron pointing the way the panel comes in. The note is the
-          button's name; the chevron only draws it. The wrapper is what the
+      {/* The scroll cue: a chevron pointing down to the rest of the page.
+          Nothing to press - the page is the way down. The wrapper is what the
           scroll moves and what clips the arrival. */}
-      <div className="landing__hint" ref={hint}>
-        <button type="button" className="landing__open" onClick={openGroup}>
-          <span className="landing__open-note">{landing.cta}</span>
-          <Chevron className="landing__hint-mark" direction="up" />
-        </button>
+      <div className="landing__hint" aria-hidden="true" ref={hint}>
+        <div className="landing__cue">
+          <Chevron className="landing__hint-mark" direction="down" />
+        </div>
       </div>
 
       <nav className="hero-titles" aria-label={controls.heroNav} ref={titles}>
@@ -167,8 +159,6 @@ export default function Landing() {
           </a>
         ))}
       </nav>
-
-      <div className="landing__mist" aria-hidden="true" />
     </section>
   )
 }
