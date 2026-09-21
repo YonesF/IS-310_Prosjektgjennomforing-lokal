@@ -134,7 +134,7 @@
   color: var(--text-muted);
   font-family: var(--font-body);
   font-size: clamp(0.98rem, 1.1vw, 1.15rem);
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1.55;
   text-wrap: pretty;
 }
@@ -433,10 +433,14 @@
    same overlap and should move together. */
 .lit-word {
   --span: 0.16;
-  color: var(--text);
-  /* The floor is a readable grey rather than a whisper: a word waiting its turn
-     is still a word somebody might need to read. */
-  opacity: clamp(0.62, calc(0.62 + (var(--lit) - var(--from)) / var(--span)), 1);
+  --t: clamp(0, calc((var(--lit) - var(--from)) / var(--span)), 1);
+  /* True black. A word waiting its turn sits at half strength - a clear
+     grey, so the eye can tell what has been read from what is to come - and
+     a word that has been read is set a shade heavier, which the variable
+     font can do by degrees. */
+  color: #000000;
+  opacity: calc(0.5 + 0.5 * var(--t));
+  font-weight: calc(500 + 60 * var(--t));
 }
 
 .member-panel__label {
