@@ -1,9 +1,11 @@
 import { useEffect, useRef } from 'react'
+import { ScrollTrigger } from '../lib/gsap.js'
 import { useMotion } from '../lib/motion.jsx'
 
 /* ===========================================================================
-   A paragraph that lights word by word as it is scrolled up its panel: dim
-   ahead of the reading line, full strength behind it.
+   A paragraph that lights word by word as it is scrolled up the screen: dim
+   ahead of the reading line, full strength behind it. It works in a panel
+   that scrolls on its own, and on the page itself.
 
    The whole thing is one custom property written on the paragraph, and the
    words work out their own share of it in CSS - so a scroll costs one style
@@ -21,6 +23,10 @@ import { useMotion } from '../lib/motion.jsx'
 
 /* The line down the panel that words light up as they rise past. */
 const READING_LINE = 0.78
+
+/* The same line down the page - a little higher, since a page has the whole
+   screen to carry a paragraph across and the eye rests nearer its middle. */
+const PAGE_LINE = 0.72
 
 /* Words light one after another rather than all at once: this is how much of
    the paragraph's travel each one takes to come up. */
@@ -45,11 +51,27 @@ export default function LitText({ text, className, revision }) {
       return undefined
     }
 
-    /* Whichever panel this is in does the scrolling; failing that, the page. */
-    const port = node.closest('dialog') ?? document.scrollingElement
-    if (!port) return undefined
-
     const lit = (value) => node.style.setProperty('--lit', value)
+
+    /* On the page, the scroll is the page's own, and ScrollTrigger already
+       measures it - through Lenis, against the viewport the page actually has.
+       The paragraph lights between its top edge reaching the reading line and
+       its bottom edge reaching it, progress tied to the scroll and nothing
+       else, so the words come up at the pace the visitor reads. */
+    const panel = node.closest('dialog')
+    if (!panel) {
+      const trigger = ScrollTrigger.create({
+        trigger: node,
+        start: `top ${PAGE_LINE * 100}%`,
+        end: `bottom ${PAGE_LINE * 100}%`,
+        onUpdate: (self) => lit(self.progress.toFixed(4)),
+        onRefresh: (self) => lit(self.progress.toFixed(4)),
+      })
+      return () => trigger.kill()
+    }
+
+    /* In a panel, the panel does the scrolling. */
+    const port = panel
 
     const update = () => {
       const room = port.scrollHeight - port.clientHeight
@@ -63,10 +85,9 @@ export default function LitText({ text, className, revision }) {
         return
       }
 
-      /* The page scrolls itself, so its box travels with the scroll and its top
-         is already the offset; a panel stands still and its box is the origin
-         everything inside is measured from. */
-      const origin = port === document.scrollingElement ? 0 : port.getBoundingClientRect().top
+      /* The panel stands still and its box is the origin everything inside is
+         measured from. */
+      const origin = port.getBoundingClientRect().top
       const box = node.getBoundingClientRect()
       const line = view * READING_LINE
 
