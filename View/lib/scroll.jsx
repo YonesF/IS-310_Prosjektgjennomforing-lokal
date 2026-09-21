@@ -48,6 +48,17 @@ export function SmoothScroll({ children }) {
     stillRef.current = still
   }, [still])
 
+  /* Everything scroll-linked measures its start and end against the page as
+     it was when it was set up. The web font and the pictures arrive after
+     that and can move things by a line or two, so the measurements are taken
+     again once each has landed. */
+  useEffect(() => {
+    const refresh = () => ScrollTrigger.refresh()
+    window.addEventListener('load', refresh)
+    document.fonts?.ready.then(refresh)
+    return () => window.removeEventListener('load', refresh)
+  }, [])
+
   useEffect(() => {
     const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches
     if (still || lowPower || isEmbedded() || !fine) return undefined
