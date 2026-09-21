@@ -47,25 +47,23 @@ export const landing = {
     height: 1085,
   },
   word: 'SYMITO',
-  /* The note on the button under the group, the one way in to the panel
-     about who we are from here. */
-  cta: 'Trykk her for å lese mer om oss',
 }
 
 /* The group shot cycles through these frames, crossfading between them; add or
-   remove one and the cycle follows. The row of portraits is complete; a row with
-   a `null` name still holds its place rather than letting the others spread out,
-   should one ever need to. */
+   remove one and the cycle follows. The caption under the picture is `label`
+   unless the frame showing has one of its own. A frame is cropped to the
+   window it is shown in; one that needs its crop taken from somewhere other
+   than the middle says where in `position`, in the CSS's own words. The row
+   of portraits is complete; a row with a `null` name still holds its place
+   rather than letting the others spread out, should one ever need to. */
 export const members = {
   group: {
     label: 'Her er vi samlet hos Kartverket',
-    /* Trykk på gruppebildet, og dette panelet kommer opp nedenfra. `intro` er
-       det første avsnittet; resten følger etter, i samme størrelse. Alle
-       lyser seg fram ord for ord når panelet rulles, slik beskrivelsene i
-       portrettpanelene gjør. Tomme avsnitt hoppes over, og har ingenting fått
-       tekst ennå, sier panelet bare at det kommer. */
-    panel: {
-      open: 'Se hvem vi er',
+    /* Teksten ved siden av gruppebildet. `subtitle` er overskriften over hele
+       delen; `intro` er det første avsnittet, og resten følger etter i samme
+       størrelse. Alle lyser seg fram ord for ord når siden rulles, slik
+       beskrivelsene i portrettpanelene gjør. Tomme avsnitt hoppes over. */
+    about: {
       title: 'SYMITO',
       subtitle: 'Hvem er vi?',
       intro:
@@ -76,8 +74,18 @@ export const members = {
       ],
     },
     photos: [
+      /* First, so it is the one the section opens on. Much wider than the
+         window, and the five of us stand left of its middle with the banner
+         to our right - so the crop is taken from the left, and nobody at the
+         edge loses a shoulder. */
+      {
+        src: media('group-techpoint.webp'),
+        width: 1800,
+        height: 976,
+        position: '22% 50%',
+        label: 'Her er vi samlet på Techpoint',
+      },
       { src: media('group-1.webp'), width: 1800, height: 1350 },
-      { src: media('group-2.webp'), width: 1800, height: 1350 },
       { src: media('group-3.webp'), width: 1800, height: 1350 },
     ],
   },
@@ -205,9 +213,10 @@ export const company = {
 }
 
 /* The heading carries the section on its own; this is the line beside it. */
+/* The ambitions as prose under the heading, opening on `lead`, every word
+   blurred until it is scrolled up to; the globe turns beneath them. */
 export const ambition = {
-  body: 'Vi sikter så høyt det går. Målet er toppen av fjellet, ikke et sted halvveis opp.',
-  goalsTitle: 'Våre ambisjoner',
+  lead: 'Våre ambisjoner:',
   goals: [
     'Få inngående erfaring med utvikling og implementering av moderne AI-løsninger i offentlig sektor.',
     'Styrke kompetansen innen teamarbeid, smidig prosjektmetodikk og faglig formidling.',
@@ -223,8 +232,12 @@ export const controls = {
   top: 'Til toppen',
 }
 
+/* `title` is what the navigation and the landing titles call a section.
+   A section that should be headed by something else on the page itself
+   carries that in `heading`; the first one is headed by the question the
+   words beside the picture answer. */
 export const sections = [
-  { id: 'medlemmer', title: 'Medlemmer' },
+  { id: 'medlemmer', title: 'Medlemmer', heading: members.group.about.subtitle },
   { id: 'video', title: 'Video' },
   { id: 'bedrift', title: 'Bedrift' },
   { id: 'ambisjonsniva', title: 'Ambisjonsnivå' },
