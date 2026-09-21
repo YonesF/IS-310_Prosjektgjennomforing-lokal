@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "cinematic-scroll-storytelling": {
+      "source": "mengto/skills",
+      "sourceType": "github",
+      "skillPath": "agent-skills/web-design/cinematic-scroll-storytelling/SKILL.md",
+      "computedHash": "d05b2a9b0e1bd0ac139126aa90122947b8c1fa8665fb7faf9fb19349f741f353"
+    }
+  }
+}
