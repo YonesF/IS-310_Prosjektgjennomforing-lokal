@@ -7,7 +7,6 @@ import { SplitWords } from './View/lib/reveal.jsx'
 import Veil from './View/components/Veil.jsx'
 import SiteNav from './View/components/SiteNav.jsx'
 import Landing from './View/components/Landing.jsx'
-import { GroupPanelProvider } from './View/components/GroupPanel.jsx'
 import MembersSection from './View/components/MembersSection.jsx'
 import VideoSection from './View/components/VideoSection.jsx'
 import PendingSection from './View/components/PendingSection.jsx'
@@ -39,7 +38,12 @@ function TopicSections() {
             aria-labelledby={`${section.id}-title`}
             key={section.id}
           >
-            <SplitWords as="h2" id={`${section.id}-title`} text={section.title} className="topic__title" />
+            <SplitWords
+              as="h2"
+              id={`${section.id}-title`}
+              text={section.heading ?? section.title}
+              className="topic__title"
+            />
             {Content ? <Content /> : null}
           </section>
         )
@@ -62,14 +66,12 @@ function App() {
           <span className="fog__bank fog__bank--a" />
           <span className="fog__bank fog__bank--b" />
         </div>
-        <GroupPanelProvider>
-          <SiteNav />
-          <main id="innhold">
-            <Landing />
-            <TopicSections />
-          </main>
-          <div className="grain" aria-hidden="true" />
-        </GroupPanelProvider>
+        <SiteNav />
+        <main id="innhold">
+          <Landing />
+          <TopicSections />
+        </main>
+        <div className="grain" aria-hidden="true" />
       </SmoothScroll>
     </MotionProvider>
   )
