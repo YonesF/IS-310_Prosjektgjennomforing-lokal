@@ -21,14 +21,12 @@
 /* ---------------------------------------------------------------------------
    Tokens.
 
-   The palette is one deep night and one colour. The page sits on a navy
-   canvas - dark and blue rather than grey, so the surfaces lifted from it have
-   room to separate and one saturated colour can carry the weight. That colour
-   is cobalt: the blue companies already trust, at a depth that reads as
-   assured rather than loud. It is the brand, and it is the only saturated thing
-   on the page, so wherever it appears it is the thing to press. Everything
-   else is white type, and a lighter cobalt for the smaller words that belong
-   to the brand - labels, links, the route drawn up the ridge.
+   The page is a white sheet with near-black type - the register of a public
+   institution's site rather than a product's - and one colour. That colour is
+   cobalt: the blue companies already trust, and here the only saturated thing
+   on the page, so wherever it appears it is the thing to press or the line to
+   follow. Surfaces step down from the white in cool light greys; the
+   photographs and the hero carry their own light.
 
    Sharp corners everywhere; the site is set like a map sheet, and a map sheet
    has no rounded corners.
@@ -42,48 +40,50 @@
   --design-width: 1600;
   --design-height: 900;
 
-  /* The ground, and the two steps up from it: a panel's sheet, then a frame
-     or a card. A step is a real step, so a card reads as lifted, not as a
-     slightly different grey. */
-  --surface: #131c2f;
-  --surface-2: #182540;
-  --surface-strong: #21304c;
-  --fog: #32456a;
+  /* The ground, and the two steps down from it: a panel's sheet, then a frame
+     or a card while its picture is still on its way. */
+  --surface: #ffffff;
+  --surface-2: #f5f7f8;
+  --surface-strong: #e2e6e9;
+  --fog: #c6c7c4;
   --sky: #e8f2fc;
-  --ink: #0a1020;
+  /* The one dark thing on the page - the video's frame - and what type is
+     set in on it and on the skip link. */
+  --plate: #191b21;
+  --ink: #ffffff;
 
-  --text: #f4f7fb;
-  --text-muted: #b3bdcd;
+  --text: #191b21;
+  --text-muted: #1f2228;
 
   /* The brand. --brand is the fill of anything that is an action - and its
-     hover lifts lighter, its press goes darker, the way a dark interface does
-     it. --accent is the same blue with enough light in it to be read as small
-     type on the canvas; --brand-soft is the tint a hovered outline fills with.
-     --cta is the action colour by name, so a page can reach for it without
-     knowing it happens to be the brand. */
+     hover goes a step darker, its press darker still, the way a light
+     interface does it. --accent is the blue small type is set in; on white
+     that is the brand itself. --brand-soft is the tint a hovered outline
+     fills with. --cta is the action colour by name, so a page can reach for
+     it without knowing it happens to be the brand. */
   --brand: #2a5fe8;
-  --brand-hover: #3b70f5;
-  --brand-active: #2150d0;
-  --brand-soft: rgba(42, 95, 232, 0.16);
-  --accent: #7fa6ff;
+  --brand-hover: #2150d0;
+  --brand-active: #1a43b3;
+  --brand-soft: rgba(42, 95, 232, 0.1);
+  --accent: #2a5fe8;
   --on-brand: #ffffff;
   --cta: var(--brand);
   --cta-hover: var(--brand-hover);
   --cta-active: var(--brand-active);
   --on-cta: var(--on-brand);
 
-  --line: rgba(244, 247, 251, 0.16);
-  --line-soft: rgba(244, 247, 251, 0.08);
-  --map-line: rgba(127, 166, 255, 0.24);
-  --map-major: rgba(127, 166, 255, 0.5);
-  --shadow: 6, 12, 26;
+  --line: rgba(25, 27, 33, 0.16);
+  --line-soft: rgba(25, 27, 33, 0.08);
+  --map-line: rgba(25, 27, 33, 0.16);
+  --map-major: rgba(25, 27, 33, 0.32);
+  --shadow: 25, 27, 33;
 
   /* For whatever asks a visitor to notice a state: a form that took, a field
-     that needs another look, something that failed. Tuned to sit beside the
-     cobalt and to read on the canvas. Nothing on the page uses them yet. */
-  --success: #34c784;
-  --warning: #f2b441;
-  --danger: #f0596b;
+     that needs another look, something that failed. Deep enough to read as
+     type on white. Nothing on the page uses them yet. */
+  --success: #187a48;
+  --warning: #8a5700;
+  --danger: #cf0007;
 
   --font-display: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-body: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -107,24 +107,7 @@
   --z-veil: 60;
   --z-skip: 70;
 
-  color-scheme: dark;
-}
-
-/* Night: the same navy, a step deeper. Both schemes are dark - the site is
-   drawn for white type on a night ground - and this one only takes the canvas
-   further down for a visitor who asked for the dark side of things. */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --surface: #0d1526;
-    --surface-2: #121c31;
-    --surface-strong: #1a2740;
-    --fog: #2a3a57;
-    --ink: #070b14;
-    --text-muted: #a9b4c6;
-    --line: rgba(244, 247, 251, 0.14);
-    --line-soft: rgba(244, 247, 251, 0.07);
-    --shadow: 3, 7, 18;
-  }
+  color-scheme: light;
 }
 
 /* ---------------------------------------------------------------------------
@@ -280,23 +263,31 @@ main {
    things animate in, but snap straight back when they re-arm - which happens
    well off screen, and leaves nothing half-played to catch on the way back. */
 @media (prefers-reduced-motion: no-preference) {
+  /* Things arrive out of a soft focus as well as from below: the blur
+     clears a little ahead of the movement, so the eye is never asked to
+     read something still resolving. */
   .reveal:not(.is-in) {
     opacity: 0;
     transform: translate3d(0, 2.2rem, 0);
+    filter: blur(3px);
   }
 
   .reveal.is-in {
     transition:
       opacity 1s var(--ease-out) var(--d),
-      transform 1.2s var(--ease-out) var(--d);
+      transform 1.2s var(--ease-out) var(--d),
+      filter 0.85s var(--ease-out) var(--d);
   }
 
   .split:not(.is-in) .split__word {
     transform: translateY(140%);
+    filter: blur(3px);
   }
 
   .split.is-in .split__word {
-    transition: transform 1.15s var(--ease-out) var(--d);
+    transition:
+      transform 1.15s var(--ease-out) var(--d),
+      filter 0.9s var(--ease-out) var(--d);
   }
 }
 
