@@ -2,7 +2,7 @@
 
 Gruppeporteføljen for IS-310 Prosjektgjennomføring. En side, bygget som én
 sammenhengende stigning: gruppen samlet i landingsbildet, kartet av fjellet bak
-videoen, og det samme fjellet reist i relieff under Ambisjonsnivå.
+videoen, og et interaktivt partikkelportrett under Ambisjonsnivå.
 
 ## Kjør
 
@@ -25,7 +25,7 @@ trenger å røres for å endre tekst, navn, bilder eller rekkefølge.
 | Legge inn det femte portrettet    | `members.people` (bytt ut `null`-raden)   |
 | Legge inn filmen                  | `video.src` og `video.poster`             |
 | Fylle inn bedriften når den er klar | `company` (og en egen komponent)         |
-| Endre teksten i Ambisjonsnivå     | `ambition.body`                           |
+| Endre teksten i Ambisjonsnivå     | `ambition.lead`, `ambition.goals`         |
 
 Bilder legges i `public/media/` som webp. Originalene ligger i `Assets/Images/`.
 
@@ -51,5 +51,13 @@ View/css/sections.css    medlemmer, video, bedrift, ambisjonsnivå
   viser alt innhold uten inntredener.
 - Myk rulling brukes bare med mus, og aldri når siden er bygget inn i en annen
   side: der skal hjulet nå vertssiden når denne er rullet ferdig.
-- WebGL-scenen lastes først når den er en skjerm unna, og tegner bare mens den
-  er synlig. Uten WebGL står seksjonen like godt uten den.
+- Partikkelportrettet lastes først når det er en skjerm unna, og animeres bare
+  mens det er synlig. Ansiktet vender seg mykt etter musepekeren.
+  Redusert bevegelse viser et stillestående ansikt; uten WebGL vises et statisk bilde.
+- Bakgrunnen i Ambisjonsnivå har en bølgende partikkelstrøm i Three.js.
+  Partiklene beregnes på GPU-en i to vekslende FBO-er. Små skjermer og svakere
+  enheter får færre partikler og lavere bildefrekvens. Strømmen stopper utenfor
+  skjermen og i skjulte faner, og står stille ved redusert bevegelse.
+  Mus og berøring bøyer strømmen forsiktig lokalt på GPU-en, uten å blokkere
+  rulling eller legge til ekstra tegnepass.
+- Ansiktsmodellens kilde og lisens ligger i `public/media/face/README.md`.
