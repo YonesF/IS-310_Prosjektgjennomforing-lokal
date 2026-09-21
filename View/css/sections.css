@@ -153,6 +153,9 @@
   --my: 0;
   --d: 0ms;
   position: relative;
+  /* Given its own layer before it arrives, so the arrival does not start
+     with the browser building one. */
+  will-change: opacity, transform;
 }
 
 /* The portrait became a button; it should still look exactly like a portrait.
@@ -545,7 +548,10 @@ a.member-panel__link:active {
 /* The frame uncovers from the top, on the frame itself rather than on the
    figure the observer watches. The opacity transition on the images is the
    crossfade between the group shots and stays on the element. The portraits
-   come up out of a light soft focus as they arrive. */
+   fade and lift as they arrive - opacity and transform only, which the
+   compositor animates without touching the pictures' pixels; a blur here
+   re-rasterised five photographs every frame and stuttered on weaker
+   machines. */
 @media (prefers-reduced-motion: no-preference) {
   .members__frame {
     clip-path: inset(0 0 100% 0);
@@ -570,14 +576,12 @@ a.member-panel__link:active {
   .member:not(.is-in) {
     opacity: 0;
     transform: translate3d(0, 2.5rem, 0);
-    filter: blur(4px);
   }
 
   .member.is-in {
     transition:
       opacity 0.9s var(--ease-out) var(--d),
-      transform 1.1s var(--ease-out) var(--d),
-      filter 0.8s var(--ease-out) var(--d);
+      transform 1.1s var(--ease-out) var(--d);
   }
 }
 
