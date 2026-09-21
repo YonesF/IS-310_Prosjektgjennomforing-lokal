@@ -42,7 +42,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          /* The ridge scene is only fetched near its own section, so three and
+          /* The particle scene is only fetched near its own section, so three and
              its renderer stay out of the entry chunk. */
           if (id.includes('node_modules/three/') || id.includes('@react-three/')) return 'three'
           /* The scroll and animation runtime, cached on its own between
