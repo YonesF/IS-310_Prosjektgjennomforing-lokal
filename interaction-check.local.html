@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Stream interaction verification</title></head>
+  <body>
+    <div id="root"></div>
+    <output id="interaction-check" style="position:fixed;bottom:0;left:0;z-index:9999;background:white;color:black;font:12px monospace;padding:6px;pointer-events:none">Waiting</output>
+    <div style="position:fixed;bottom:40px;right:8px;z-index:9999;display:flex;gap:8px;background:white;color:black">
+      <button id="touch-start">Test touch</button><button id="touch-end">Release touch</button><button id="leave">Leave stream</button>
+    </div>
+    <script type="module">
+      if (new URLSearchParams(location.search).has('still')) {
+        const matchMedia = window.matchMedia.bind(window)
+        window.matchMedia = (query) => {
+          const result = matchMedia(query)
+          if (query.includes('prefers-reduced-motion')) Object.defineProperty(result, 'matches', {value:true})
+          return result
+        }
+      }
+      const locations = new WeakMap()
+      let pointer = [0,0,0]
+      let frames = 0
+      const getLocation = WebGL2RenderingContext.prototype.getUniformLocation
+      WebGL2RenderingContext.prototype.getUniformLocation = function (program, name) {
+        const result = getLocation.call(this, program, name)
+        if (result) locations.set(result, name)
+        return result
+      }
+      const set3f = WebGL2RenderingContext.prototype.uniform3f
+      WebGL2RenderingContext.prototype.uniform3f = function (location,x,y,z) {
+        if (locations.get(location) === 'uPointer' && this.canvas.closest('.particle-stream')) pointer = [x,y,z]
+        return set3f.call(this, location,x,y,z)
+      }
+      const draw = WebGL2RenderingContext.prototype.drawArrays
+      WebGL2RenderingContext.prototype.drawArrays = function (mode,first,count) {
+        if (mode === this.POINTS && this.canvas.closest('.particle-stream')) frames++
+        return draw.call(this,mode,first,count)
+      }
+      await import('/main.jsx')
+      const send = (type, pointerType, buttons) => {
+        const section = document.querySelector('#ambisjonsniva')
+        const bounds = section.getBoundingClientRect()
+        section.dispatchEvent(new PointerEvent(type, {
+          bubbles:true, isPrimary:true, pointerId:10, pointerType, buttons,
+          clientX:bounds.left + bounds.width * 0.65, clientY:bounds.top + bounds.height * 0.5,
+        }))
+      }
+      document.querySelector('#touch-start').onclick = () => send('pointerdown','touch',1)
+      document.querySelector('#touch-end').onclick = () => send('pointerup','touch',0)
+      document.querySelector('#leave').onclick = () => send('pointerleave','mouse',0)
+      setInterval(() => {
+        const stream = document.querySelector('.particle-stream')
+        document.querySelector('#interaction-check').textContent = JSON.stringify({pointer:pointer.map(v=>Number(v.toFixed(3))),frames,state:stream?.dataset.state,quality:stream?.dataset.quality})
+      }, 250)
+    </script>
+  </body>
+</html>
