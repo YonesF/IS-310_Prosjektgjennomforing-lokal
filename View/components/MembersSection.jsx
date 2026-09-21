@@ -1,29 +1,51 @@
 import { useEffect, useRef, useState } from 'react'
 import { members } from '../../Model/site.js'
 import { follow, release } from '../lib/follow.js'
+import { gsap, useGSAP } from '../lib/gsap.js'
 import { useMotion } from '../lib/motion.jsx'
 import { useReveal } from '../lib/reveal.jsx'
 import { cx } from '../lib/cx.js'
 import Chevron from './Chevron.jsx'
+import LitText from './LitText.jsx'
 import MemberPanel from './MemberPanel.jsx'
-import { useGroupPanel } from './GroupPanel.jsx'
 
 /* ===========================================================================
-   Medlemmer: the group above, the five of them below.
+   Medlemmer: the group and the words about us side by side above, the five
+   of them below.
    =========================================================================== */
 
 const SWAP_INTERVAL = 5200
 
 /* The group's frames, crossfading in turn. They all sit in the frame at once and
    only their opacity moves, so the swap costs a composite rather than a layout
-   and never shifts the page. The frame uncovers from the bottom as it arrives. */
-function GroupPhotos({ onOpen }) {
+   and never shifts the page. The frame uncovers from the bottom as it arrives,
+   and inside it the picture drifts a little slower than the page - held taller
+   than its window so the drift never shows an edge. */
+function GroupPhotos() {
   const { still } = useMotion()
   const host = useRef(null)
+  const drift = useRef(null)
   const [figure, inView] = useReveal()
   const [onScreen, setOnScreen] = useState(false)
   const [shown, setShown] = useState(0)
   const photos = members.group.photos
+  const caption = photos[shown]?.label ?? members.group.label
+
+  useGSAP(
+    () => {
+      if (still) return
+      gsap.fromTo(
+        drift.current,
+        { yPercent: -5 },
+        {
+          yPercent: 5,
+          ease: 'none',
+          scrollTrigger: { trigger: figure.current, start: 'top bottom', end: 'bottom top', scrub: true },
+        },
+      )
+    },
+    { dependencies: [still], revertOnUpdate: true, scope: figure },
+  )
 
   useEffect(() => {
     const node = host.current
@@ -50,18 +72,10 @@ function GroupPhotos({ onOpen }) {
 
   return (
     <figure className={cx('members__group', inView && 'is-in')} ref={figure}>
-      {/* The whole photograph is the control that opens the group panel. It
-          carries its own name, so the button says what it does rather than only
-          what it shows. */}
-      <button
-        type="button"
-        className="members__open"
-        aria-label={members.group.panel.open}
-        onClick={onOpen}
-      >
-        {/* One image as far as assistive technology is concerned: every frame is
-            the same group, and announcing a swap between them would be noise. */}
-        <div className="members__frame" ref={host} role="img" aria-label={members.group.label}>
+      {/* One image as far as assistive technology is concerned: every frame is
+          the same group, and announcing a swap between them would be noise. */}
+      <div className="members__frame" ref={host} role="img" aria-label={members.group.label}>
+        <div className="members__drift" ref={drift}>
           {photos.map((photo, index) => (
             <img
               key={photo.src}
@@ -72,12 +86,38 @@ function GroupPhotos({ onOpen }) {
               loading="lazy"
               decoding="async"
               className={index === shown ? 'is-shown' : undefined}
+              style={photo.position ? { objectPosition: photo.position } : undefined}
             />
           ))}
         </div>
-      </button>
-      <figcaption className="members__caption">{members.group.label}</figcaption>
+      </div>
+      {/* The caption follows the frame showing. Keyed on its words, so a
+          change mounts a fresh span and the fade-in plays again. */}
+      <figcaption className="members__caption">
+        <span className="members__caption-text" key={caption}>
+          {caption}
+        </span>
+      </figcaption>
     </figure>
+  )
+}
+
+/* Who we are, beside the picture of us. The question heads the whole section,
+   so the column is the answer alone; the paragraphs light word by word as
+   they are scrolled up to reading height. Whatever is empty in the model is
+   left out rather than printed blank. */
+function GroupText() {
+  const { about } = members.group
+  const intro = about.intro?.trim()
+  const paragraphs = (about.paragraphs ?? []).map((text) => text?.trim()).filter(Boolean)
+
+  return (
+    <div className="members__text">
+      {intro ? <LitText text={intro} className="members__body" /> : null}
+      {paragraphs.map((text) => (
+        <LitText text={text} className="members__body" key={text.slice(0, 40)} />
+      ))}
+    </div>
   )
 }
 
@@ -133,13 +173,14 @@ export default function MembersSection() {
      what changes, not the panel. */
   const [opened, setOpened] = useState(null)
 
-  /* The group's own panel is shared with the landing photograph, which opens
-     the same one, so it lives above both rather than here. */
-  const openGroup = useGroupPanel()
-
   return (
     <div className="members">
-      <GroupPhotos onOpen={openGroup} />
+      {/* The picture on the left, the words on the right; one above the other
+          on a phone. */}
+      <div className="members__about">
+        <GroupPhotos />
+        <GroupText />
+      </div>
 
       <ul className="members__row">
         {members.people.map((person, index) => (
