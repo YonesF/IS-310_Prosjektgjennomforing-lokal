@@ -31,9 +31,61 @@
   position: fixed;
   z-index: var(--z-veil);
   inset: 0;
+  display: grid;
+  place-items: center;
   background: var(--surface);
   clip-path: inset(0 0 0 0);
   pointer-events: none;
+}
+
+/* The name, and under it a line the width of the name that fills while the
+   site gets ready. Both go up with the sheet. */
+.veil__mark {
+  display: grid;
+  gap: 0.9rem;
+  justify-items: stretch;
+  color: var(--text);
+  opacity: 0;
+  animation: veil-in 0.6s ease 0.1s forwards;
+}
+
+.veil__name {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3.2vw, 2.6rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* A hairline in the brand's blue. It is paced to the longest the sheet can
+   hold, so it is nearly full by the time the cap falls - and it snaps the last
+   of the way the moment the site is ready before that. */
+.veil__bar {
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: veil-fill var(--wait, 1400ms) cubic-bezier(0.3, 0.6, 0.6, 1) forwards;
+}
+
+.is-ready .veil__bar {
+  animation: none;
+  transform: scaleX(1);
+  transition: transform 0.25s var(--ease-out);
+}
+
+@keyframes veil-in {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes veil-fill {
+  to {
+    transform: scaleX(0.94);
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -64,7 +116,7 @@
   width: 70vmax;
   height: 70vmax;
   border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0));
+  background: radial-gradient(closest-side, rgba(226, 230, 233, 0.9), rgba(226, 230, 233, 0));
   will-change: transform;
 }
 
@@ -76,7 +128,7 @@
 .fog__bank--b {
   right: -22vmax;
   bottom: -26vmax;
-  background: radial-gradient(closest-side, rgba(127, 166, 255, 0.13), rgba(127, 166, 255, 0));
+  background: radial-gradient(closest-side, rgba(42, 95, 232, 0.08), rgba(42, 95, 232, 0));
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -121,8 +173,7 @@
 }
 
 /* ---------------------------------------------------------------------------
-   The navigation. Nothing drawn behind it: white type with a little shadow,
-   which is enough over the fog, the night and the photographs alike. The
+   The navigation. Nothing drawn behind it: dark type on the white page. The
    current section is underlined.
 
    Three columns rather than two ends: the links sit in the middle one, so
@@ -142,7 +193,6 @@
   gap: 1.5rem;
   padding-inline: var(--pad-x);
   color: var(--text);
-  text-shadow: 0 1px 14px rgba(8, 13, 20, 0.45);
   opacity: 0;
   visibility: hidden;
   transform: translateY(-100%);
@@ -178,7 +228,6 @@
   /* Its column is only as wide as the one opposite, which is what keeps the
      links on the middle of the page. The name must not wrap inside it. */
   white-space: nowrap;
-  text-shadow: 0 0 24px rgba(127, 166, 255, 0.35);
 }
 
 .site-nav__links {
@@ -341,22 +390,11 @@
   pointer-events: none;
 }
 
-/* The bottom edge dissolves into the fog rather than ending at a line. */
-.landing__mist {
-  position: absolute;
-  z-index: 2;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: 28%;
-  background: linear-gradient(to bottom, transparent, var(--surface));
-  pointer-events: none;
-}
-
-/* The way in to the panel about the group: a note saying so in a small
-   square box, over a chevron pointing up, the way the panel comes in. It sits
-   in the mist, above the fold's edge. The wrapper is clipped for the
-   button's arrival, and keeps a little room above for the lift on hover. */
+/* The scroll cue under the group: a chevron pointing down to the rest of the
+   page. It sits over the picture just above the fold's edge, white with a
+   little shade behind it so it reads on the clothes there, and lets the
+   pointer through - there is nothing here to press. The wrapper is clipped
+   for the cue's arrival. */
 .landing__hint {
   position: absolute;
   z-index: 3;
@@ -367,67 +405,38 @@
   justify-content: center;
   overflow: hidden;
   padding: 0.5rem 0 0.35rem;
+  pointer-events: none;
 }
 
-/* The button is the note and the mark together, with room around both so a
-   finger finds it. Nothing of a button's own appearance: the box the note
-   sits in is the only edge drawn. */
-.landing__open {
+.landing__cue {
   display: grid;
   justify-items: center;
-  gap: 0.6rem;
-  padding: 0.6rem 0.9rem 0.45rem;
-  border: 0;
-  background: none;
+  padding: 0.4rem 0.9rem;
   color: rgba(255, 255, 255, 0.92);
-  filter: drop-shadow(0 1px 10px rgba(8, 13, 20, 0.5));
-  cursor: pointer;
+  filter: drop-shadow(0 1px 8px rgba(8, 13, 20, 0.55));
 }
 
-.landing__open:focus-visible {
-  outline-offset: 2px;
-}
-
-/* The note: a small square box in the site's label setting, glassed a little
-   over the mist so it reads on whatever the photograph has there. It
-   brightens while the button is under the pointer. */
-.landing__open-note {
-  padding: 0.55rem 0.8rem;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  background: rgba(8, 13, 20, 0.38);
-  font-family: var(--font-mono);
-  font-size: clamp(0.64rem, 0.8vw, 0.74rem);
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  line-height: 1;
-  text-transform: uppercase;
-  white-space: nowrap;
-  transition:
-    border-color 0.3s ease,
-    background 0.3s ease;
-}
-
-.landing__open:hover .landing__open-note,
-.landing__open:focus-visible .landing__open-note {
-  border-color: rgba(255, 255, 255, 0.8);
-  background: rgba(8, 13, 20, 0.55);
-}
-
-/* `translate` is the hover's and `transform` the arrival's, so the two never
-   fight over one property. */
+/* The mark nods down and back, slowly, the way the page is to be taken. */
 .landing__hint-mark {
   display: block;
   width: clamp(2rem, 2.6vw, 2.75rem);
   height: auto;
-  transition: translate 0.6s var(--ease-out);
 }
 
-/* The mark lifts a little while the button is under the pointer - the same
-   way the panel will. */
-@media (hover: hover) {
-  .landing__open:hover .landing__hint-mark,
-  .landing__open:focus-visible .landing__hint-mark {
-    translate: 0 -0.3rem;
+@media (prefers-reduced-motion: no-preference) {
+  .landing__hint-mark {
+    animation: cue-nod 2.4s ease-in-out infinite;
+  }
+}
+
+@keyframes cue-nod {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+
+  50% {
+    translate: 0 0.3rem;
   }
 }
 
@@ -545,13 +554,13 @@
     opacity: 0.78;
   }
 
-  /* The button comes up last, after the fourth title. */
-  .landing__open {
+  /* The cue comes up last, after the fourth title. */
+  .landing__cue {
     transform: translateY(120%);
     transition: transform 1.3s var(--ease-out) calc(4 * 95ms + 420ms);
   }
 
-  .is-ready .landing__open {
+  .is-ready .landing__cue {
     transform: none;
   }
 }
@@ -587,9 +596,6 @@
   text-align: center;
   text-transform: uppercase;
   text-wrap: balance;
-  /* A filter rather than a text shadow: the words sit inside clipped masks
-     while they arrive, and a shadow drawn in there would be cut to boxes. */
-  filter: drop-shadow(0 0 22px rgba(127, 166, 255, 0.26));
 }
 
 /* A section with nothing in it yet holds its place, the way the fifth
@@ -656,10 +662,6 @@
   .landing__word {
     top: 51%;
     font-size: clamp(4rem, 24vw, 7rem);
-  }
-
-  .landing__mist {
-    height: 34%;
   }
 
   .topic {
