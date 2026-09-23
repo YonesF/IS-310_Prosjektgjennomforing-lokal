@@ -6,8 +6,7 @@ import { cx } from '../lib/cx.js'
 /* ===========================================================================
    The navigation that takes over once the hero titles have scrolled away.
 
-   It draws nothing behind itself: white type with a little shadow, which is
-   enough over the fog, the night and the photographs alike. The current
+   It draws nothing behind itself: white type with a little shadow, the night and the photographs alike. The current
    section is underlined.
    =========================================================================== */
 
