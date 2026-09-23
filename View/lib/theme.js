@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 
 /* ===========================================================================
-   The light/dark switch. The tokens in base.css are written dark-first, so
-   the only state this file ever has to apply on top is 'light' - anything
-   else, including a blocked localStorage, simply leaves the dark defaults in
+   The light/dark switch. The tokens in base.css are written light-first, so
+   the only state this file ever has to apply on top is 'dark' - anything
+   else, including a blocked localStorage, simply leaves the light defaults in
    place. The inline script in index.html reads the same key before paint, so
    a returning visitor's choice never flashes the other theme first.
    =========================================================================== */
@@ -12,7 +12,7 @@ const STORAGE_KEY = 'is310-theme'
 export const THEME_EVENT = 'is310:theme'
 
 export function currentTheme() {
-  return document.documentElement.dataset.theme === 'light' ? 'light' : 'dark'
+  return document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light'
 }
 
 export function applyTheme(theme) {

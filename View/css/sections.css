@@ -657,6 +657,7 @@ a.member-panel__link:active {
    centred on the page.
    --------------------------------------------------------------------------- */
 .topic--ambisjonsniva {
+  position: relative;
   isolation: isolate;
   grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto auto 1fr;
@@ -743,16 +744,6 @@ a.member-panel__link:active {
   width: min(100%, 40rem, 47dvh);
   aspect-ratio: 1;
   isolation: isolate;
-}
-
-.ambition__scene::after {
-  content: '';
-  position: absolute;
-  z-index: -1;
-  inset: 10%;
-  border-radius: 50%;
-  background: radial-gradient(ellipse, rgba(42, 95, 232, 0.045), transparent 68%);
-  pointer-events: none;
 }
 
 .particle-globe {
