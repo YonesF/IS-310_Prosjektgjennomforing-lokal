@@ -197,95 +197,33 @@
   opacity: 1;
 }
 
-/* Fixed over everything, clear of the scroll. */
+/* Fixed over everything, clear of the scroll: a compact word in the nav's
+   own type, naming the mode the page is in right now. */
 .theme-toggle {
   position: fixed;
   z-index: var(--z-nav);
   right: clamp(1rem, 3vw, 2rem);
   bottom: clamp(1rem, 3vw, 2rem);
-}
-
-/* The switch - the box around the slider. */
-.switch {
-  font-size: 17px;
-  position: relative;
-  display: inline-block;
-  width: 3.5em;
-  height: 2em;
-  transform-style: preserve-3d;
-  perspective: 500px;
-  animation: toggle__animation 3s infinite;
-}
-
-/* The brand's own soft glow behind the switch, in place of the Uiverse
-   original's rainbow. */
-.switch::before {
-  content: '';
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  left: 0;
-  top: 0;
-  filter: blur(20px);
-  z-index: -1;
-  border-radius: 50px;
-  background: var(--brand);
-  opacity: 0.55;
-}
-
-/* Hide default HTML checkbox. */
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-/* The slider. */
-.slider {
-  position: absolute;
+  padding: 0.55rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
   cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: var(--surface-2);
-  transition: 0.4s;
-  border-radius: 30px;
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease;
 }
 
-.slider:before {
-  position: absolute;
-  content: '';
-  height: 1.4em;
-  width: 1.4em;
-  left: 0.3em;
-  bottom: 0.35em;
-  transition: 0.4s;
-  border-radius: 50%;
-  box-shadow:
-    rgba(var(--shadow), 0.17) 0px -10px 10px 0px inset,
-    rgba(var(--shadow), 0.09) 0px -1px 15px -8px;
-  background-color: var(--surface);
-}
-
-.input__check:checked + .slider {
-  background-color: var(--brand);
-}
-
-.input__check:checked + .slider:before {
-  transform: translateX(1.5em);
-  background-color: var(--on-brand);
-}
-
-@keyframes toggle__animation {
-  0%,
-  100% {
-    transform: translateY(-10px) rotateX(15deg) rotateY(-20deg);
-  }
-
-  50% {
-    transform: translateY(0px) rotateX(15deg) rotateY(-20deg);
-  }
+.theme-toggle:hover,
+.theme-toggle:focus-visible {
+  border-color: var(--accent);
+  background: var(--surface-strong);
 }
 
 /* ---------------------------------------------------------------------------
