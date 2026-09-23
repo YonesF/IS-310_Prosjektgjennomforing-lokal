@@ -656,39 +656,60 @@
     --nav-h: 3.75rem;
   }
 
-  /* A landscape group photo cannot fill a portrait screen without losing
-     people. Give it a width-led frame, with space above for the links. */
+  /* The photograph is more than twice as wide as it is tall, so a portrait
+     screen cannot show it full-bleed the way a laptop does without losing the
+     people at its edges. The fold still fills the screen: the group is shown
+     whole along the bottom of it, widened until it reaches both edges, and the
+     wall they stand against is carried on up the screen behind the name and
+     the titles - the same composition the desktop fold has, in a portrait
+     frame. */
   .landing {
     min-height: 0;
-    height: min(100svh, max(25rem, 100vw));
-    background: #777568;
+    /* As tall as the composition needs and no taller: the titles, the name,
+       and the group along the bottom. Any taller and the wall above them
+       becomes a void. */
+    height: min(100svh, 22rem);
+    background: #b0a08a;
   }
 
+  /* The painted wall: it meets the photograph in the photograph's own colours
+     - olive at the left, tan at the right - and darkens toward the top so the
+     titles read against it. */
   .landing__sky {
-    background: linear-gradient(110deg, #767265, #b2a78c);
+    background:
+      linear-gradient(to bottom, rgba(24, 20, 12, 0.34), rgba(24, 20, 12, 0) 52%),
+      linear-gradient(100deg, #9a8a72, #bcad94);
   }
 
+  /* The group spans 83% of the picture and sits a little left of its middle,
+     so at this width it reaches both screen edges with nobody cropped. */
   .landing__photo {
     top: auto;
+    right: auto;
     bottom: 0;
-    height: auto;
-    aspect-ratio: 2400 / 1085;
+    left: -6.2%;
+    width: 118%;
+    /* Shorter than the picture's own shape, so the empty wall along its top
+       is cut away rather than carried down the screen: what is left is the
+       group, and just enough wall above them for the name. */
+    height: 44vw;
   }
 
   .landing__photo img {
-    object-fit: contain;
+    object-fit: cover;
     object-position: center bottom;
-    transform: translate(calc(var(--mx) * -9px), calc(var(--my) * -9px)) scale(1.02);
+    transform: translate(calc(var(--mx) * -9px), calc(var(--my) * -9px));
   }
 
-  /* Blend only the empty wall into the backdrop; keep every face and the
-     foreground cutout opaque and aligned with the photograph beneath it. */
+  /* Only the empty wall along the top of the photograph fades into the painted
+     wall above it; every face, and the cutout in front, stays opaque. */
   .landing__photo > img:first-child {
-    mask-image: linear-gradient(to bottom, transparent, #000 30%);
+    mask-image: linear-gradient(to bottom, transparent, #000 22%);
   }
 
+  /* The titles sit on the painted wall, which is darkened for them already. */
   .landing__shade {
-    top: -200%;
+    display: none;
   }
 
   .site-nav {
@@ -724,10 +745,12 @@
     font-size: clamp(1rem, 5.5vw, 2rem);
   }
 
-  /* Keep the name on the photo's wall, behind the same foreground cutout. */
+  /* Placed against the photograph, as on the desktop fold: the heads stand
+     in front of the name's lower edge. Its box is the photograph's, so the
+     percentage is of the picture's height, not the screen's. */
   .landing__word {
-    top: 36%;
-    font-size: clamp(3rem, 21vw, 10rem);
+    top: 6%;
+    font-size: clamp(3rem, 19vw, 10rem);
   }
 
   .landing__hint {
@@ -749,8 +772,36 @@
   }
 }
 
-/* A short landscape phone has room for one row above the group. */
+/* Turned on its side, a phone is nearly the picture's own shape: it takes
+   the full-bleed fold the desktop has, with the titles in one row above the
+   group. */
 @media (max-width: 767px) and (orientation: landscape) {
+  .landing {
+    height: 100svh;
+  }
+
+  .landing__photo {
+    top: 0;
+    left: 0;
+    right: 0;
+    width: auto;
+    height: auto;
+  }
+
+  .landing__photo img {
+    object-fit: cover;
+    object-position: 48% 70%;
+  }
+
+  .landing__photo > img:first-child {
+    mask-image: none;
+  }
+
+  .landing__word {
+    top: 44%;
+    font-size: clamp(3rem, 15vw, 10rem);
+  }
+
   .hero-titles {
     top: max(1rem, env(safe-area-inset-top));
     display: flex;
