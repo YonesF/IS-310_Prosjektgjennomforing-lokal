@@ -60,12 +60,6 @@ function App() {
           {controls.skip}
         </a>
         <Veil />
-        {/* The weather behind the page: fog that drifts. Fixed, transparent to
-            the pointer, under everything. */}
-        <div className="fog" aria-hidden="true">
-          <span className="fog__bank fog__bank--a" />
-          <span className="fog__bank fog__bank--b" />
-        </div>
         <SiteNav />
         <main id="innhold">
           <Landing />
