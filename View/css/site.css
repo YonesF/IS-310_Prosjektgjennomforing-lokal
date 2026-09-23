@@ -205,7 +205,7 @@
   bottom: clamp(1rem, 3vw, 2rem);
 }
 
-/* From Uiverse.io by EddyBel. The switch - the box around the slider. */
+/* The switch - the box around the slider. */
 .switch {
   font-size: 17px;
   position: relative;
@@ -217,6 +217,8 @@
   animation: toggle__animation 3s infinite;
 }
 
+/* The brand's own soft glow behind the switch, in place of the Uiverse
+   original's rainbow. */
 .switch::before {
   content: '';
   position: absolute;
@@ -227,14 +229,8 @@
   filter: blur(20px);
   z-index: -1;
   border-radius: 50px;
-  background-color: #d8ff99;
-  background-image:
-    radial-gradient(at 21% 46%, hsla(183, 65%, 60%, 1) 0px, transparent 50%),
-    radial-gradient(at 23% 25%, hsla(359, 74%, 70%, 1) 0px, transparent 50%),
-    radial-gradient(at 20% 1%, hsla(267, 83%, 75%, 1) 0px, transparent 50%),
-    radial-gradient(at 86% 87%, hsla(204, 69%, 68%, 1) 0px, transparent 50%),
-    radial-gradient(at 99% 41%, hsla(171, 72%, 77%, 1) 0px, transparent 50%),
-    radial-gradient(at 55% 24%, hsla(138, 60%, 62%, 1) 0px, transparent 50%);
+  background: var(--brand);
+  opacity: 0.55;
 }
 
 /* Hide default HTML checkbox. */
@@ -252,7 +248,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #fdfefedc;
+  background-color: var(--surface-2);
   transition: 0.4s;
   border-radius: 30px;
 }
@@ -267,21 +263,18 @@
   transition: 0.4s;
   border-radius: 50%;
   box-shadow:
-    rgba(0, 0, 0, 0.17) 0px -10px 10px 0px inset,
-    rgba(0, 0, 0, 0.09) 0px -1px 15px -8px;
-  background-color: #ff99fd;
-  background-image:
-    radial-gradient(at 81% 39%, hsla(327, 79%, 79%, 1) 0px, transparent 50%),
-    radial-gradient(at 11% 72%, hsla(264, 64%, 79%, 1) 0px, transparent 50%),
-    radial-gradient(at 23% 20%, hsla(75, 98%, 71%, 1) 0px, transparent 50%);
+    rgba(var(--shadow), 0.17) 0px -10px 10px 0px inset,
+    rgba(var(--shadow), 0.09) 0px -1px 15px -8px;
+  background-color: var(--surface);
 }
 
 .input__check:checked + .slider {
-  background-color: #17202a;
+  background-color: var(--brand);
 }
 
 .input__check:checked + .slider:before {
   transform: translateX(1.5em);
+  background-color: var(--on-brand);
 }
 
 @keyframes toggle__animation {
