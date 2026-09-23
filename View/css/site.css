@@ -197,6 +197,43 @@
   opacity: 1;
 }
 
+/* Fixed over everything, clear of the scroll: a single dot that slides
+   between the two edges of its track, left for dark and right for light, so
+   the switch reads at a glance without needing a label. */
+.theme-toggle {
+  position: fixed;
+  z-index: var(--z-nav);
+  right: clamp(1rem, 3vw, 2rem);
+  bottom: clamp(1rem, 3vw, 2rem);
+  width: 2.75rem;
+  height: 1.5rem;
+  padding: 0.2rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.theme-toggle:hover,
+.theme-toggle:focus-visible {
+  border-color: var(--accent);
+}
+
+.theme-toggle__dot {
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background: var(--accent);
+  translate: 0 0;
+  transition: translate 0.3s var(--ease-out);
+}
+
+.theme-toggle[aria-pressed='true'] .theme-toggle__dot {
+  translate: 1.15rem 0;
+}
+
 /* ---------------------------------------------------------------------------
    The landing. The group photograph fills the fold; the titles sit in a row
    along the top of it, over the bare wall above the group.

@@ -112,6 +112,37 @@
 }
 
 /* ---------------------------------------------------------------------------
+   Light mode. The dark tokens above are the site's default; ThemeToggle.jsx
+   sets data-theme on the root, and only what changes between the two modes
+   is repeated here. --plate, --ink and the state colours hold across both.
+   --------------------------------------------------------------------------- */
+:root[data-theme='light'] {
+  --surface: #f9e1cd;
+  --surface-2: #c1b176;
+  --surface-strong: #95a494;
+  --fog: #95a494;
+  --sky: #f9e1cd;
+
+  --text: #3c3025;
+  --text-muted: #51412f;
+
+  --brand: #3b5837;
+  --brand-hover: #324b2f;
+  --brand-active: #2a3f28;
+  --brand-soft: rgba(59, 88, 55, 0.1);
+  --accent: #3b5837;
+  --on-brand: #ffffff;
+
+  --line: rgba(60, 48, 37, 0.16);
+  --line-soft: rgba(60, 48, 37, 0.08);
+  --map-line: rgba(60, 48, 37, 0.16);
+  --map-major: rgba(60, 48, 37, 0.32);
+  --shadow: 60, 48, 37;
+
+  color-scheme: light;
+}
+
+/* ---------------------------------------------------------------------------
    Reset.
    --------------------------------------------------------------------------- */
 *,

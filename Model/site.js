@@ -230,6 +230,8 @@ export const controls = {
   nav: 'Sidenavigasjon',
   heroNav: 'Gå til en del av siden',
   top: 'Til toppen',
+  themeToLight: 'Bytt til lys modus',
+  themeToDark: 'Bytt til mørk modus',
 }
 
 /* `title` is what the navigation and the landing titles call a section.
