@@ -7,8 +7,8 @@ const LazyParticleGlobe = lazy(() => import('./ParticleGlobe.jsx'))
 const LazyParticleStream = lazy(() => import('./ParticleStream.jsx'))
 
 /* ===========================================================================
-   Ambisjonsnivå: under the heading, the ambitions as prose, coming into
-   focus as they are scrolled to; under that, the globe of particles turning.
+   Ambisjonsnivå: the ambitions come into focus on either side of the
+   turning particle globe.
    =========================================================================== */
 export default function AmbitionSection() {
   return (
@@ -17,11 +17,20 @@ export default function AmbitionSection() {
         <LazyParticleStream />
       </SceneSlot>
 
-      <BlurProse className="ambition__prose" lead={ambition.lead} paragraphs={ambition.goals} />
+      <BlurProse
+        className="ambition__prose ambition__prose--left"
+        lead={ambition.lead}
+        paragraphs={ambition.goals.slice(0, 1)}
+      />
 
       <SceneSlot className="ambition__scene" aria-hidden="true">
         <LazyParticleGlobe />
       </SceneSlot>
+
+      <BlurProse
+        className="ambition__prose ambition__prose--right"
+        paragraphs={[ambition.goals.slice(1).join(' ')]}
+      />
     </>
   )
 }
