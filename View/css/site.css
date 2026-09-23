@@ -98,6 +98,66 @@
   }
 }
 
+/* ---------------------------------------------------------------------------
+   The weather. Two banks of fog that drift across the page over a minute.
+   A fixed layer under everything, moved by transform alone, and held still
+   with the rest of the site.
+   --------------------------------------------------------------------------- */
+.fog {
+  position: fixed;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.fog__bank {
+  position: absolute;
+  width: 70vmax;
+  height: 70vmax;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--fog-color), transparent);
+  will-change: transform;
+}
+
+.fog__bank--a {
+  --fog-color: color-mix(in srgb, var(--fog) 90%, transparent);
+  top: -22vmax;
+  left: -18vmax;
+}
+
+.fog__bank--b {
+  --fog-color: color-mix(in srgb, var(--accent) 8%, transparent);
+  right: -22vmax;
+  bottom: -26vmax;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .fog__bank--a {
+    animation: fog-a 46s ease-in-out infinite alternate;
+  }
+
+  .fog__bank--b {
+    animation: fog-b 58s ease-in-out infinite alternate;
+  }
+
+  .is-still .fog__bank {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes fog-a {
+  to {
+    transform: translate3d(20vmax, 12vmax, 0) scale(1.15);
+  }
+}
+
+@keyframes fog-b {
+  to {
+    transform: translate3d(-18vmax, -14vmax, 0) scale(1.1);
+  }
+}
+
 
 /* ---------------------------------------------------------------------------
    Grain: a fixed sheet of texture over everything. Never on a scrolling

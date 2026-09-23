@@ -61,6 +61,10 @@ function App() {
           {controls.skip}
         </a>
         <Veil />
+        <div className="fog" aria-hidden="true">
+          <span className="fog__bank fog__bank--a" />
+          <span className="fog__bank fog__bank--b" />
+        </div>
         <SiteNav />
         <main id="innhold">
           <Landing />
