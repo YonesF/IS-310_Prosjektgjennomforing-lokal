@@ -656,6 +656,41 @@
     --nav-h: 3.75rem;
   }
 
+  /* A landscape group photo cannot fill a portrait screen without losing
+     people. Give it a width-led frame, with space above for the links. */
+  .landing {
+    min-height: 0;
+    height: min(100svh, max(25rem, 100vw));
+    background: #777568;
+  }
+
+  .landing__sky {
+    background: linear-gradient(110deg, #767265, #b2a78c);
+  }
+
+  .landing__photo {
+    top: auto;
+    bottom: 0;
+    height: auto;
+    aspect-ratio: 2400 / 1085;
+  }
+
+  .landing__photo img {
+    object-fit: contain;
+    object-position: center bottom;
+    transform: translate(calc(var(--mx) * -9px), calc(var(--my) * -9px)) scale(1.02);
+  }
+
+  /* Blend only the empty wall into the backdrop; keep every face and the
+     foreground cutout opaque and aligned with the photograph beneath it. */
+  .landing__photo > img:first-child {
+    mask-image: linear-gradient(to bottom, transparent, #000 30%);
+  }
+
+  .landing__shade {
+    top: -200%;
+  }
+
   .site-nav {
     gap: 0.75rem;
   }
@@ -675,24 +710,28 @@
 
   /* Still centred, still along the top; the row wraps into two on a phone. */
   .hero-titles {
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
     top: clamp(2.75rem, 6.5dvh, 4rem);
     right: 1.25rem;
     left: 1.25rem;
-    column-gap: 2rem;
+    column-gap: clamp(1rem, 5vw, 2rem);
     row-gap: 0.8rem;
   }
 
   /* Sized so Bedrift and Ambisjonsnivå share the second line on a phone. */
   .hero-title {
-    font-size: clamp(1.35rem, 6vw, 2rem);
+    font-size: clamp(1rem, 5.5vw, 2rem);
   }
 
-  /* Nearly the width of the screen: a phone shows only the middle of the
-     group, and the word should still reach past them on both sides. A little
-     lower too, so the one head in the middle covers the bottom of it. */
+  /* Keep the name on the photo's wall, behind the same foreground cutout. */
   .landing__word {
-    top: 51%;
-    font-size: clamp(4rem, 24vw, 7rem);
+    top: 36%;
+    font-size: clamp(3rem, 21vw, 10rem);
+  }
+
+  .landing__hint {
+    bottom: max(0.5rem, env(safe-area-inset-bottom));
   }
 
   .topic {
@@ -707,6 +746,19 @@
 
   .topic__pending {
     aspect-ratio: 4 / 3;
+  }
+}
+
+/* A short landscape phone has room for one row above the group. */
+@media (max-width: 767px) and (orientation: landscape) {
+  .hero-titles {
+    top: max(1rem, env(safe-area-inset-top));
+    display: flex;
+    column-gap: clamp(1rem, 3vw, 1.5rem);
+  }
+
+  .hero-title {
+    font-size: clamp(0.85rem, 2.5vw, 1.2rem);
   }
 }
 
