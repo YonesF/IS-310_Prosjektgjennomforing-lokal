@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="color-scheme" content="dark light" />
-    <meta name="theme-color" content="#321a06" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#f9e1cd" />
     <title>Gruppe 11 | IS-310 Prosjektgjennomføring</title>
     <meta
       name="description"
@@ -12,12 +12,12 @@
     />
 
     <!-- Sets the theme before anything paints, from the choice ThemeToggle.jsx
-         last saved - otherwise the dark default would flash before React's
-         first render corrected it to a returning visitor's light preference. -->
+         last saved - otherwise the light default would flash before React's
+         first render corrected it to a returning visitor's dark preference. -->
     <script>
       try {
         var storedTheme = localStorage.getItem('is310-theme')
-        if (storedTheme === 'light') document.documentElement.dataset.theme = 'light'
+        if (storedTheme === 'dark') document.documentElement.dataset.theme = 'dark'
       } catch (e) {}
     </script>
 
