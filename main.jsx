@@ -6,6 +6,7 @@ import { SmoothScroll } from './View/lib/scroll.jsx'
 import { SplitWords } from './View/lib/reveal.jsx'
 import Veil from './View/components/Veil.jsx'
 import SiteNav from './View/components/SiteNav.jsx'
+import ThemeToggle from './View/components/ThemeToggle.jsx'
 import Landing from './View/components/Landing.jsx'
 import MembersSection from './View/components/MembersSection.jsx'
 import VideoSection from './View/components/VideoSection.jsx'
@@ -60,8 +61,6 @@ function App() {
           {controls.skip}
         </a>
         <Veil />
-        {/* The weather behind the page: fog that drifts. Fixed, transparent to
-            the pointer, under everything. */}
         <div className="fog" aria-hidden="true">
           <span className="fog__bank fog__bank--a" />
           <span className="fog__bank fog__bank--b" />
@@ -71,6 +70,7 @@ function App() {
           <Landing />
           <TopicSections />
         </main>
+        <ThemeToggle />
         <div className="grain" aria-hidden="true" />
       </SmoothScroll>
     </MotionProvider>

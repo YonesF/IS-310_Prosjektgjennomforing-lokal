@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import * as THREE from 'three'
+import { THEME_EVENT } from './theme.js'
 
 /* ===========================================================================
    Scenes borrow the site's colours instead of restating them, so an edit in
@@ -49,7 +50,11 @@ export function usePalette() {
     const media = window.matchMedia('(prefers-color-scheme: dark)')
     const sync = () => setPalette(readPalette())
     media.addEventListener('change', sync)
-    return () => media.removeEventListener('change', sync)
+    window.addEventListener(THEME_EVENT, sync)
+    return () => {
+      media.removeEventListener('change', sync)
+      window.removeEventListener(THEME_EVENT, sync)
+    }
   }, [])
 
   return palette

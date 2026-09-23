@@ -438,7 +438,7 @@
      grey, so the eye can tell what has been read from what is to come - and
      a word that has been read is set a shade heavier, which the variable
      font can do by degrees. */
-  color: #000000;
+  color: var(--text-muted);
   opacity: calc(0.5 + 0.5 * var(--t));
   font-weight: calc(500 + 60 * var(--t));
 }
